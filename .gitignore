@@ -42,4 +42,4 @@ yarn-error.log*
 *.tsbuildinfo
 
 # minio 
-minio-data/
+minio-data
