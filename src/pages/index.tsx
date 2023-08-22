@@ -6,6 +6,8 @@ import { api } from "~/utils/api";
 export default function Home() {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+  const { status } = useSession({ required: true })
+
   return (
     <>
       <Head>

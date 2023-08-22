@@ -7,61 +7,61 @@ import bcrypt from "bcrypt";
 import { prisma } from "../../../server/db";
 
 export const authOptions: NextAuthOptions = {
-    callbacks: {
-        session({ session, token, user }) {
-            if (session.user) {
-                session.user.id = token.sub ?? "";
-            }
+  callbacks: {
+    session({ session, token, user }) {
+      if (session.user) {
+        session.user.id = token.sub ?? "";
+      }
 
-            return session;
-        },
-        jwt({ token }) {
-
-            return token;
-        },
+      return session;
     },
-    adapter: PrismaAdapter(prisma),
-    providers: [
-        CredentialsProvider({
-            name: "Credentials",
-            credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" },
-            },
-            async authorize(credentials) {
-                // Add logic here to look up the user from the credentials supplied
-                const user = await prisma.user.findFirst({
-                    where: {
-                        email: credentials?.email,
-                    },
-                });
+    jwt({ token }) {
 
-                if (!user) {
-                    return null;
-                }
-
-                const password = credentials?.password ?? "";
-                const userPassword = user.password ?? "";
-
-                const passwordMatches = await bcrypt.compare(password, userPassword);
-
-                if (!passwordMatches) {
-                    return null;
-                }
-
-                return {
-                    id: user.id,
-                };
-            },
-            type: "credentials",
-        }),
-    ],
-    session: {
-        strategy: "jwt",
+      return token;
     },
-    pages: {
-        signIn: "/login",
-    },
+  },
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // Add logic here to look up the user from the credentials supplied
+        const user = await prisma.user.findFirst({
+          where: {
+            email: credentials?.email,
+          },
+        });
+
+        if (!user) {
+          return null;
+        }
+
+        const password = credentials?.password ?? "";
+        const userPassword = user.password ?? "";
+
+        const passwordMatches = await bcrypt.compare(password, userPassword);
+
+        if (!passwordMatches) {
+          return null;
+        }
+
+        return {
+          id: user.id,
+        };
+      },
+      type: "credentials",
+    }),
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth/login",
+  },
 };
 
 export default NextAuth(authOptions);
