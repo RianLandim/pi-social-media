@@ -21,7 +21,6 @@ export const authOptions: NextAuthOptions = {
         },
     },
     adapter: PrismaAdapter(prisma),
-    // Configure one or more authentication providers
     providers: [
         CredentialsProvider({
             name: "Credentials",
