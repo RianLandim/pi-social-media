@@ -12,20 +12,24 @@ export const postsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        image: z.custom<File>(),
+        files: z.array(z.custom<File>()),
         content: z.string(),
+        communityId: z.string().cuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.community.create({
-        data: {
-          name: input.name,
-          createdBy: {
-            connect: {
-              id: ctx.session.user.id,
-            },
+      await ctx.prisma.$transaction(async (prisma) => {
+        const post = await prisma.post.create({
+          data: {
+            content: input.content,
+            communityId: input.communityId,
+            userId: ctx.session.user.id,
           },
-        },
+        });
+
+        for (const file of input.files) {
+          console.log(file.name);
+        }
       });
     }),
   list: publicProcedure.query(async ({ ctx }) => {
