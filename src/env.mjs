@@ -27,6 +27,12 @@ export const env = createEnv({
     AWS_SECRET_ACCESS_KEY_ID: z.string(),
 
     MINIO_URL: z.string(),
+
+    // Mail Verification
+    MAIL_HOST: z.string(),
+    MAIL_PORT: z.string(),
+    MAIL_USER: z.string(),
+    MAIL_PASS: z.string(),
   },
 
   /**
@@ -53,6 +59,11 @@ export const env = createEnv({
     AWS_REGION: process.env.AWS_REGION,
     AWS_SECRET_ACCESS_KEY_ID: process.env.AWS_SECRET_ACCESS_KEY_ID,
     MINIO_URL: process.env.MINIO_URL,
+
+    MAIL_HOST: process.env.MAIL_HOST,
+    MAIL_PASS: process.env.MAIL_PASS,
+    MAIL_PORT: process.env.MAIL_PORT,
+    MAIL_USER: process.env.MAIL_USER,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
