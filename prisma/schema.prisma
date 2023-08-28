@@ -25,6 +25,7 @@ model Post {
   userId      String
   communityId String?
   content     String  @db.VarChar(255)
+  title       String
 
   user      User       @relation(fields: [userId], references: [id])
   community Community? @relation(fields: [communityId], references: [id])

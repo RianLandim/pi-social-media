@@ -2,11 +2,12 @@ import { signOut, useSession } from "next-auth/react";
 import Avatar from "boring-avatars";
 import { SignOut } from "@phosphor-icons/react";
 import { api } from "~/utils/api";
+import { InputPost } from "~/components/InputPost";
 
 export default function Feed() {
   const { status, data: session } = useSession({ required: true });
 
-  const { data, fetchStatus } = api.communities.list.useQuery();
+  const { data, fetchStatus } = api.post.listAll.useQuery();
 
   if (status === "loading" || fetchStatus === "fetching") {
     return (
@@ -59,10 +60,12 @@ export default function Feed() {
         </ul>
       </aside>
       <section className=" border-r-1 border-l-1 w-2/3 border-slate-600">
+        <InputPost />
         {data &&
           data.map((item) => (
-            <ul>
-              <li>{item.name}</li>
+            <ul className="flex flex-col items-center justify-center">
+              <li>{item.title}</li>
+              <li>{item.content}</li>
             </ul>
           ))}
       </section>
