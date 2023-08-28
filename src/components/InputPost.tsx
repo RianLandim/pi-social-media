@@ -3,8 +3,8 @@ import MenubarDemo from "./MenuBar";
 export function InputPost() {
   return (
     <div className="w-full bg-slate-400">
-      <textarea />
-      <MenubarDemo />
+      <textarea className="w-full resize-none rounded-md" />
+      {/* <MenubarDemo /> */}
     </div>
   );
 }
