@@ -33,6 +33,7 @@ export const env = createEnv({
     MAIL_PORT: z.string(),
     MAIL_USER: z.string(),
     MAIL_PASS: z.string(),
+    MAIL_FROM: z.string(),
   },
 
   /**
@@ -64,6 +65,7 @@ export const env = createEnv({
     MAIL_PASS: process.env.MAIL_PASS,
     MAIL_PORT: process.env.MAIL_PORT,
     MAIL_USER: process.env.MAIL_USER,
+    MAIL_FROM: process.env.MAIL_FROM,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
