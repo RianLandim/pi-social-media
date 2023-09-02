@@ -14,10 +14,47 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
+model Community {
+    id String @id @default(cuid())
+    name String
+    description String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+    postId String
+    post Post @relation(fields: [postId], references: [id])
+}
+
+model SubCommunity {
+    id String @id @default(cuid())
+    name String
+    description String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    postId String
+    post Post @relation(fields: [postId], references: [id])
+}
+
+model File {
+    id String @id @default(cuid())
+    url String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    postId String
+    post Post @relation(fields: [postId], references: [id])
+}
+
+model Post {
+    id        String   @id @default(cuid())
+    description String
+    files File[]
+    userId String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    post User @relation(name: "OwnPost", fields: [userId], references: [id])
+    replys Post[] @relation(name: "replys")
+    replieds Post[] @relation(name: "replys")
+    subCommunity SubCommunity[]
+    Community Community[]
 }
 
 // Necessary for Next auth
@@ -54,6 +91,8 @@ model User {
     password      String?
     emailVerified DateTime?
     image         String?
+    posts         Post[] @relation(name: "OwnPost")
+     
     accounts      Account[]
     sessions      Session[]
 }
