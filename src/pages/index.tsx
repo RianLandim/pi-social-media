@@ -11,12 +11,6 @@ export default function Feed() {
 
   const postsQuery = api.post.listAll.useQuery();
 
-  // const testeQuery = {
-  //   isLoading: true,
-  //   isError: false,
-  //   data: postsQuery.data ?? [],
-  // };
-
   return (
     <main className="flex min-h-screen w-screen flex-row items-center justify-center bg-slate-300">
       <aside className="flex h-screen min-h-screen w-1/5 flex-col items-center justify-start space-y-4 bg-slate-600 p-8">
