@@ -14,7 +14,6 @@ services:
       - data:/var/lib/mysql
     networks:
       - sd_net
-
   storage:
     image: minio/minio
     container_name: sd-minio
