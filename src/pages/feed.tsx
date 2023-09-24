@@ -1,9 +1,10 @@
 import React from 'react';
 
+
 function SocialMediaFeed() {
   return (
     <div className="flex">
-      <nav className="w-1/6 p-4">
+      <nav className="bg-black text-white w-1/6 h-screen p-4">
         <ul>
           <li><a href="#" className="block py-2 px-4">Perfil</a></li>
           <li><a href="#" className="block py-2 px-4">Página Inicial</a></li>
@@ -43,10 +44,51 @@ function SocialMediaFeed() {
               />
             </svg>
           </div>
+          <div className="bg-white rounded-lg shadow-md p-4">
+          <button
+           /* onClick={""}*/
+            className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Pesquisar
+          </button>
+        </div>
+          
         </div>
         <div className="bg-white rounded-lg shadow-md p-4">
-          {/* Componente ou botão para criar uma nova postagem */}
+        <textarea
+          placeholder="Digite sua publicação aqui..."
+          className="w-full resize-none border rounded-md py-2 px-3 mb-3 focus:outline-none focus:ring focus:ring-blue-200"
+        ></textarea>
+        <div className="flex items-center justify-between">
+          <button
+            /*onClick={}*/
+            className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Publicar
+          </button>
+          <div className="space-x-2">
+            <label htmlFor="file-upload" className="cursor-pointer">
+              <span className="text-gray-500">Anexar:</span>
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                accept="image/*, video/*"
+                /*onChange={}*/
+              />
+              <span className="text-blue-500">Foto/Vídeo</span>
+            </label>
+            <span className="text-gray-500">ou</span>
+            <button
+              /*onClick={handleAttachFile}*/
+              className="text-blue-500 hover:underline focus:outline-none"
+            >
+              Escolher arquivo
+            </button>
+          </div>
         </div>
+      </div>
+
       </div>
     </div>
   );
