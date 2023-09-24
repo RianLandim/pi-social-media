@@ -4,7 +4,7 @@ import React from 'react';
 function SocialMediaFeed() {
   return (
     <div className="flex">
-      <nav className="bg-black text-white w-1/6 h-screen p-4">
+      <nav className="bg-black text-white text-center flex flex-col items-center justify-center w-1/5 h-screen p-4">
         <ul>
           <li><a href="#" className="block py-2 px-4">Perfil</a></li>
           <li><a href="#" className="block py-2 px-4">Página Inicial</a></li>
@@ -23,6 +23,8 @@ function SocialMediaFeed() {
       </div>
       <div className="w-1/3 p-4">
         <div className="mb-4">
+         
+          <div className="bg-white rounded-lg shadow-md p-4 space-y-2">
           <div className="relative">
             <input
               type="text"
@@ -44,7 +46,6 @@ function SocialMediaFeed() {
               />
             </svg>
           </div>
-          <div className="bg-white rounded-lg shadow-md p-4">
           <button
            /* onClick={""}*/
             className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
