@@ -18,6 +18,7 @@ export default function Aside() {
           </div>
         </div>
       </div>
+
       <div className="justify-left m-auto mt-12 flex w-56">
         <ul className="list-none">
           <li className="mb-5 flex	items-center text-lg">
@@ -32,12 +33,19 @@ export default function Aside() {
             <PaperPlaneTilt size={20} className="mr-2.5" />
             Mensagens
           </li>
-          <li className="mb-5 flex	items-center text-lg">
+          <li className="mb-24 flex	items-center text-lg">
             <Gear size={20} className="mr-2.5" />
-            Confogurações
+            Configurações
           </li>
         </ul>
       </div>
+      
+      <div className="flex justify-center mb-20">
+        <a className="border-solid border-2 border-[#808080] hover:bg-[#808080]	px-6 py-2 br rounded-md" href="">
+          Sair
+        </a>
+      </div>
+
     </div>
   );
 }
