@@ -2,16 +2,25 @@ import React from 'react';
 
 
 function SocialMediaFeed() {
+  const stories = [
+    { id: 1, username: 'user1', image: 'story1.jpg' },
+    { id: 2, username: 'user2', image: 'story2.jpg' },
+    { id: 3, username: 'user3', image: 'story3.jpg' },
+    // Adicione mais storys conforme necessário
+  ];
+
   return (
     <div className="flex">
+      
       <nav className="bg-black text-white text-center flex flex-col items-center justify-center w-1/5 h-screen p-4">
         <ul>
-          <li><a href="#" className="block py-2 px-4">Perfil</a></li>
-          <li><a href="#" className="block py-2 px-4">Página Inicial</a></li>
-          <li><a href="#" className="block py-2 px-4">Notificações</a></li>
-          <li><a href="#" className="block py-2 px-4">Mensagens</a></li>
-          <li><a href="#" className="block py-2 px-4">Salvos</a></li>
-          <li><a href="#" className="block py-2 px-4">Configurações</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Perfil</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Página Inicial</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Notificações</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Mensagens</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Salvos</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Configurações</a></li>
+          <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Sair</a></li>
         </ul>
       </nav>
       <div className="w-1/2 p-4">
@@ -77,7 +86,7 @@ function SocialMediaFeed() {
                 accept="image/*, video/*"
                 /*onChange={}*/
               />
-              <span className="text-blue-500">Foto/Vídeo</span>
+              <span className="text-blue-500 hover:underline focus:outline-none">Foto/Vídeo</span>
             </label>
             <span className="text-gray-500">ou</span>
             <button
