@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Aside from './auth/aside';
 
 function SocialMediaFeed() {
   const stories = [
@@ -11,8 +11,8 @@ function SocialMediaFeed() {
 
   return (
     <div className="flex">
-      
-      <nav className="bg-black text-white text-center flex flex-col items-center justify-center w-1/5 h-screen p-4">
+      <Aside />
+      {/*<nav className="bg-black text-white text-center flex flex-col items-center justify-center w-1/5 h-screen p-4">
         <ul>
           <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Perfil</a></li>
           <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Página Inicial</a></li>
@@ -22,7 +22,7 @@ function SocialMediaFeed() {
           <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Configurações</a></li>
           <li><a href="#" className="block py-2 px-4 hover:underline focus:outline-none">Sair</a></li>
         </ul>
-      </nav>
+  </nav>*/}
       <div className="w-1/2 p-4">
         {/* Aqui vamos mapear as postagens */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
