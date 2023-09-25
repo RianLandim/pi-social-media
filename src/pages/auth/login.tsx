@@ -30,12 +30,14 @@ export default function Login() {
   }
 
   return (
-    <main className="h-screen w-screen flex items-center justify-center">
+    <main className="h-screen bg-slate-800 w-screen flex items-center justify-center">
       <form
-        className="p-12 bg-slate-500 items-center justify-center flex flex-col space-y-4 w-1/3 h-2/3 rounded-lg"
+        className="p-12 bg-black items-center flex flex-col space-y-4 w-1/3 h-2/3 rounded-lg"
         onSubmit={handleSubmit(submit)}>
-        <h3 className="text-3xl text-white font-bold">Login</h3>
-        <div className="w-full flex flex-row bg-white items-center justify-center rounded-md p-1">
+        <img src="https://i.imgur.com/BhWGMn1.jpg" alt="" />
+        <div className="flex flex-col space-y-4">
+        <h3 className="text-3xl text-white font-bold">Entrar em Paperland</h3>
+        <div className="w-96 flex flex-row bg-white items-center justify-center rounded-md p-1">
           <input
             className="p-2 w-full"
             placeholder="Email"
@@ -44,7 +46,7 @@ export default function Login() {
           />
 
         </div>
-        <div className="w-full flex flex-row bg-white items-center justify-center rounded-md p-1">
+        <div className="w-96 flex flex-row bg-white items-center justify-center rounded-md p-1">
           <input
             className="w-full p-2 rounded-md"
             placeholder="Senha"
@@ -53,9 +55,16 @@ export default function Login() {
           />
           <Eye size={28} onClick={() => setShowPass(!showPass)} />
         </div>
-        <button className="w-full p-2 bg-blue-400 rounded-md hover:bg-blue-700">
+        <button className="w-96 p-2 bg-[#B20DFF] rounded-md hover:bg-[#f719be]" >
           <span className="text-white font-bold">Entrar</span>
         </button>
+        <button className="w-96 p-2 bg- rounded-md border-solid border hover:bg-[#333333]" >
+          <span className="text-white font-bold">Esqueceu a senha?</span>
+        </button>
+        <span className="text-white"> 
+          Criar conta? <a className="text-blue-400" href="">Inscreva-se</a> 
+        </span>
+        </div>
       </form>
     </main>
   )
