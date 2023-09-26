@@ -2,12 +2,6 @@ import React from 'react';
 import Aside from './auth/aside';
 
 function SocialMediaFeed() {
-  const stories = [
-    { id: 1, username: 'user1', image: 'story1.jpg' },
-    { id: 2, username: 'user2', image: 'story2.jpg' },
-    { id: 3, username: 'user3', image: 'story3.jpg' },
-    // Adicione mais storys conforme necessário
-  ];
 
   return (
     <div className="flex">
