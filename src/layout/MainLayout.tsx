@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode } from "react";
+import PostModel from "~/components/PostModel";
 import Sidebar from "~/components/Sidebar";
 
 type Props = {
@@ -9,8 +10,12 @@ export default function MainLayout({ children }: Props) {
   return (
     <main className="flex h-screen w-full flex-row ">
       <Sidebar />
-      <section className="flex h-screen w-3/5 flex-col items-center justify-center bg-zinc-400 p-4">
+      <section className="flex h-screen w-3/5 flex-col items-center  bg-zinc-400 p-4 overflow-scroll">
         {children}
+        {/* PREVIEW x3 posts */}
+        <PostModel />
+        <PostModel />
+        <PostModel />
       </section>
       <aside className="h-screen w-1/5 bg-slate-600"></aside>
     </main>
