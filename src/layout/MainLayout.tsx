@@ -10,14 +10,11 @@ export default function MainLayout({ children }: Props) {
   return (
     <main className="flex h-screen w-full flex-row ">
       <Sidebar />
-      <section className="flex h-screen w-3/5 flex-col items-center bg-zinc-400 p-4 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+      <section className="flex h-screen w-full flex-col items-center bg-zinc-400 p-4 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
         {children}
         {/* PREVIEW x3 posts */}
-        <PostModel />
-        <PostModel />
-        <PostModel />
       </section>
-      <aside className="h-screen w-1/5 bg-slate-600"></aside>
+      {/* <aside className="h-screen w-1/5 bg-slate-600"></aside> */}
     </main>
   );
 }
