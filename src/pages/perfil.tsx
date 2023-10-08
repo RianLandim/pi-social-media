@@ -56,6 +56,8 @@ function ProfilePage() {
 
         <div className="mt-8">
           <Post />
+
+
           {/* Repita este bloco para cada postagem */}
         </div>
       </div>

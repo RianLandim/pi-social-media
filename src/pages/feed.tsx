@@ -1,5 +1,6 @@
 import React from 'react';
 import Aside from './auth/aside';
+import Post from './auth/post';
 
 function SocialMediaFeed() {
 
@@ -20,7 +21,9 @@ function SocialMediaFeed() {
       <div className="w-1/2 p-4">
         {/* Aqui vamos mapear as postagens */}
         <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-          {/* Conteúdo da postagem */}
+          <Post/>
+          <Post/>
+          <Post/>
         </div>
         {/* Vamos repetir esse bloco a cada */}
       </div>
