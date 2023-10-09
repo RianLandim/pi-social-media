@@ -23,7 +23,6 @@ function ProfilePage() {
 
   return (
     <div className="flex bg-black">
-      <Aside />
 
       <div className="w-3/4 p-4 bg-black">
         
