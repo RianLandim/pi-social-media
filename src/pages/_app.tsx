@@ -1,15 +1,13 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { type AppProps } from "next/app";
-
+import { AppProps } from "next/app";
 import { api } from "~/utils/api";
-
 import "~/styles/globals.css";
-import { type ReactElement, type ReactNode } from "react";
-import { type NextPage } from "next";
+import { NextPage } from "next";
+import { ReactElement, ReactNode } from "react";
 
-export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
+export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
+  getMainLayout?: (page: ReactElement) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps<{ session: Session | null }> & {
@@ -17,10 +15,12 @@ type AppPropsWithLayout = AppProps<{ session: Session | null }> & {
 };
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page);
+  const getMainLayout = Component.getMainLayout ?? ((page) => page);
 
   return (
-    <SessionProvider>{getLayout(<Component {...pageProps} />)}</SessionProvider>
+    <SessionProvider>
+      {getMainLayout(<Component {...pageProps} />)}
+    </SessionProvider>
   );
 }
 

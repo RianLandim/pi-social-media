@@ -25,7 +25,6 @@ export const postsRouter = createTRPCRouter({
         files: z.array(fileName),
         content: z.string(),
         communityId: z.string().cuid(),
-        djashj: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
