@@ -1,20 +1,18 @@
 import React, { useState } from 'react';
-import Aside from './auth/aside';
-import Post from './auth/post';
 
 function ProfilePage() {
-  // Estado para controlar a exibição do campo de criação de publicação
+
   const [creatingPost, setCreatingPost] = useState(false);
 
-  // Estado para armazenar o conteúdo da publicação
+  
   const [postContent, setPostContent] = useState('');
 
-  // Função para manipular a criação da publicação
+  
   const handleCreatePost = () => {
     setCreatingPost(true);
   };
 
-  // Função para manipular o envio da publicação
+  
   const handleSubmitPost = () => {
     // Lógica para enviar a publicação (conteúdo do postContent) aqui
 
@@ -55,14 +53,10 @@ function ProfilePage() {
         <hr className="my-8 border-t-2 border-gray-300" />
 
         <div className="mt-8">
-          <Post />
 
-
-          {/* Repita este bloco para cada postagem */}
         </div>
       </div>
 
-      {/* Barra lateral direita */}
       <div className="w-1/4 p-4 bg-gray-100">
         <div className="bg-white rounded-lg shadow-md p-4 space-y-2">
           <div className="relative">
@@ -98,7 +92,6 @@ function ProfilePage() {
           Criar Publicação
         </button>
 
-        {/* Esse campo aqui é pra criar uma publicação, a caixinhaque digita e anexa as fotos*/}
         {creatingPost && (
           <div className="mt-4 p-4 bg-white rounded-md shadow-md">
             <textarea
