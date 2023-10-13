@@ -1,5 +1,6 @@
 import MainLayout, { getMainLayout } from "~/layout/MainLayout";
 import { NextPageWithLayout } from "../_app";
+import Link from "next/link";
 
 const Settings: NextPageWithLayout = () => {
   return (
@@ -26,17 +27,23 @@ const Settings: NextPageWithLayout = () => {
                 <span className="ml-10">JOHN CENA</span>
               </li>
               <li>
-              <h2 className="mb-3">Email</h2>
+                <h2 className="mb-3">Email</h2>
                 <span className="ml-10">johncenaaaaa@smoke.com</span>
               </li>
             </ul>
           </div>
         </div>
-        <div className="flex self-end mr-32 gap-28 mt-5">
-          <h1 className="px-8 py-2 bg-red-700 rounded-lg">Editar Perfil</h1>
-          <h1 className="underline self-center	">Mudar Senha</h1>
-        </div> 
-          
+        <div className="flex self-end mr-32 gap-20 mt-5">
+          <Link className="px-8 py-2 bg-red-700 rounded-lg"
+            href={'/profile/edit_profile'}>
+            <h1>Editar Perfil</h1>
+          </Link>
+          <Link className="underline self-center"
+            href={'/profile/change_password'}>
+            <h1>Mudar Senha</h1>
+          </Link>
+        </div>
+
       </div>
     </div>
   );

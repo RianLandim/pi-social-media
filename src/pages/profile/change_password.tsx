@@ -1,5 +1,6 @@
 import MainLayout, { getMainLayout } from "~/layout/MainLayout";
 import { NextPageWithLayout } from "../_app";
+import Link from "next/link";
 
 const Settings: NextPageWithLayout = () => {
   return (
@@ -30,18 +31,16 @@ const Settings: NextPageWithLayout = () => {
             </div>
 
             <div className="flex gap-5 self-end ">
-              <button className="w-32 py-1 bg-red-400 rounded-md" type="submit" id="submitButton">
-                <span>Cancelar</span>
-              </button>
-              <button className="w-32 py-1 bg-red-400 rounded-md" type="submit" id="submitButton">
-                <span>Confirmar</span>
+                <Link className="w-32 py-1 bg-red-400 rounded-md text-center" href={'/profile/settings'}>
+                  <p>Cancelar</p>
+                </Link>
+              <button className="w-32 py-1 bg-red-400 rounded-md text-center" type="submit" id="submitButton">
+                <p>Confirmar</p>
               </button>
             </div>
-            
+
           </form>
         </div>
-        
-
       </div>
     </div>
   );
