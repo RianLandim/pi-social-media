@@ -12,29 +12,32 @@ const Settings: NextPageWithLayout = () => {
       <div className="my-32 flex w-full flex-col justify-center border-2 pl-28">
 
         <div className="flex w-full">
-          <form action="" method="post" name="signupForm" id="signupForm" className="w-2/5 text-lg flex flex-col gap-8">
+          <form action="submit" method="post" name="signupForm" id="signupForm" className="w-2/5 text-lg flex flex-col gap-8">
 
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <label htmlFor="password">Nova Senha</label>
-                <input className="rounded-md" type="password" id="password" name="password" required />
+                <input className="h-10 rounded-md bg-transparent border border-solid border-white border-1" type="password" id="password" name="password" required />
               </div>
 
               <div className="flex flex-col gap-1">
                 <label htmlFor="confirmPassword">Digite novamente a Senha</label>
-                <input className="rounded-md"
+                <input className="h-10 rounded-md bg-transparent border border-solid border-white border-1"
                   type="password"
                   id="confirmPassword"
                   name="confirmPassword"
+                  required
                 />
               </div>
             </div>
 
-            <div className="flex gap-5 self-end ">
-                <Link className="w-32 py-1 bg-red-400 rounded-md text-center" href={'/profile/settings'}>
-                  <p>Cancelar</p>
-                </Link>
-              <button className="w-32 py-1 bg-red-400 rounded-md text-center" type="submit" id="submitButton">
+            <div className="flex gap-5 self-end">
+              <Link className="w-32 py-1 bg-red-700 rounded-md text-center"
+                href={'/profile/settings'}>
+                <p>Cancelar</p>
+              </Link>
+              <button className="w-32 py-1 bg-red-700 rounded-md text-center"
+                type="submit" id="submitButton">
                 <p>Confirmar</p>
               </button>
             </div>
