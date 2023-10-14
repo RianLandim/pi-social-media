@@ -50,7 +50,7 @@ export default function Sidebar() {
             Mensagens
           </Link>
           <Link
-            href={"/"}
+            href={'profile/settings'}
             className="mb-24 flex	items-center rounded-md  p-2 text-lg hover:bg-slate-800"
           >
             <Gear size={20} className="mr-2.5" />
@@ -61,9 +61,7 @@ export default function Sidebar() {
 
       <div className="mb-20 flex justify-center">
         <a
-          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]"
-          href=""
-        >
+          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]">
           Sair
         </a>
       </div>
