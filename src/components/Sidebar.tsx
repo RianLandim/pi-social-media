@@ -1,5 +1,5 @@
 import { Gear, PaperPlaneTilt, Bell, House } from "@phosphor-icons/react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 export default function Sidebar() {
@@ -50,7 +50,7 @@ export default function Sidebar() {
             Mensagens
           </Link>
           <Link
-            href={'profile/settings'}
+            href={"profile/settings"}
             className="mb-24 flex	items-center rounded-md  p-2 text-lg hover:bg-slate-800"
           >
             <Gear size={20} className="mr-2.5" />
@@ -60,10 +60,12 @@ export default function Sidebar() {
       </div>
 
       <div className="mb-20 flex justify-center">
-        <a
-          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]">
+        <button
+          onClick={() => signOut()}
+          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]"
+        >
           Sair
-        </a>
+        </button>
       </div>
     </div>
   );

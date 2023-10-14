@@ -9,6 +9,7 @@ import { NextPageWithLayout } from "./_app";
 import { getMainLayout } from "~/layout/MainLayout";
 
 const Feed: NextPageWithLayout = () => {
+  useSession({required:true})
   const postsQuery = api.post.listAll.useQuery();
 
   return (
