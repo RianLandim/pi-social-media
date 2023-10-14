@@ -5,8 +5,8 @@ import Link from "next/link";
 const Settings: NextPageWithLayout = () => {
   return (
     <div className="flex h-full w-full bg-black text-white">
-      <div className="my-32 flex w-2/5 flex-col items-center border-2">
-        <span className="w-4/5 rounded-md bg-red-500 py-3 pl-10	">Conta</span>
+      <div className="my-32 text-lg font-medium	 flex w-2/5 flex-col items-center border-2">
+        <p className="w-4/5 rounded-md bg-red-500 py-2 pl-10	">Conta</p>
       </div>
 
       <div className="my-32 flex w-full flex-col justify-center border-2 pl-28">
@@ -32,7 +32,7 @@ const Settings: NextPageWithLayout = () => {
             </div>
 
             <div className="flex gap-5 self-end">
-              <Link className="w-32 py-1 bg-red-700 rounded-md text-center"
+              <Link className="w-32 py-1 border-solid border-2 border-red-700 rounded-md text-center"
                 href={'/profile/settings'}>
                 <p>Cancelar</p>
               </Link>
