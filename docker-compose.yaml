@@ -28,6 +28,19 @@ services:
     command: minio server /data --console-address 0.0.0.0:41277
     volumes:
       - ./minio-data:/data
+  app:
+    platform: "linux/amd64"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLIENTVAR: "clientvar"
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    image: t3-app
+    environment:
+      - DATABASE_URL='mysql://root:12345@database:3306/methodus?schema=public'
 
 networks:
   sd_net:

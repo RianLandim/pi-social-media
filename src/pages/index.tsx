@@ -1,6 +1,5 @@
-import { signOut, useSession } from "next-auth/react";
-import Avatar from "boring-avatars";
-import { SignOut } from "@phosphor-icons/react";
+import { useSession } from "next-auth/react";
+
 import { api } from "~/utils/api";
 import { InputPost } from "~/components/InputPost";
 import { match } from "ts-pattern";
@@ -10,6 +9,7 @@ import { getMainLayout } from "~/layout/MainLayout";
 
 const Feed: NextPageWithLayout = () => {
   useSession({ required: true });
+
   const postsQuery = api.post.listAll.useQuery();
 
   return (
@@ -33,6 +33,6 @@ const Feed: NextPageWithLayout = () => {
   );
 };
 
-Feed.getLayout = getMainLayout;
+Feed.getMainLayout = getMainLayout;
 
 export default Feed;
