@@ -9,7 +9,7 @@ import { NextPageWithLayout } from "./_app";
 import { getMainLayout } from "~/layout/MainLayout";
 
 const Feed: NextPageWithLayout = () => {
-  useSession({required:true})
+  useSession({ required: true });
   const postsQuery = api.post.listAll.useQuery();
 
   return (
@@ -24,7 +24,6 @@ const Feed: NextPageWithLayout = () => {
           .otherwise(({ data }) => {
             return data.map((item) => (
               <ul className="flex flex-col items-center justify-center">
-                <li>{item.title}</li>
                 <li>{item.content}</li>
               </ul>
             ));
