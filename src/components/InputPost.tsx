@@ -9,8 +9,10 @@ type formSchemaProps = z.infer<typeof formSchema>;
 export function InputPost() {
   const { register, handleSubmit } = useForm<formSchemaProps>({
     resolver: zodResolver(formSchema),
+    defaultValues: { description: "" },
   });
 
+  const utils = api.useContext();
   const postSubmitMutation = api.post.create.useMutation();
   const submit: SubmitHandler<formSchemaProps> = (data) => {
     postSubmitMutation.mutate(
@@ -20,7 +22,7 @@ export function InputPost() {
       },
       {
         onSuccess: () => {
-          console.log("funcionou");
+          utils.post.listAll.invalidate();
         },
       }
     );
