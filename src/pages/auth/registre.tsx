@@ -22,35 +22,36 @@ export default function Register() {
     createUserMutation.mutate(data);
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-400 p-8">
-      <h1 className="text-2xl font-bold uppercase text-white">Registre-se</h1>
-      <form
+    <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-800 p-8 text-white">
+       <form
         onSubmit={handleSubmit(submit)}
-        className="flex flex-col items-center justify-center space-y-4 rounded-md bg-slate-200 p-8"
+        className="p-12 bg-black items-center flex flex-col space-y-4 w-96 h-2/3 rounded-lg"
       >
-        <div>
-          <label>Nome</label>
+        <img className="rounded-md w-96" src="https://i.imgur.com/BhWGMn1.jpg" alt="logo" />
+        <h3 className="text-3xl font-bold">Registre-se em Paperland</h3>
+        <div className="w-full">
           <input
             {...register("name")}
-            className="w-full rounded-md bg-white p-2"
+            className="w-full rounded-md bg-black p-2 border border-[#8f8f8f]"
+            placeholder="Nome"
           />
         </div>
-        <div>
-          <label>Email</label>
+        <div className="w-full">
           <input
             {...register("email")}
-            className="w-full rounded-md bg-white p-2"
+            className="w-full rounded-md bg-black p-2 border border-[#8f8f8f]"
+            placeholder="Email"
           />
         </div>
-        <div>
-          <label>Senha</label>
+        <div className="w-full">
           <input
             {...register("password")}
-            className="w-full rounded-md bg-white p-2"
+            className="mb-3 w-full rounded-md bg-black p-2 border border-[#8f8f8f]"
+            placeholder="Senha"
             type="password"
           ></input>
         </div>
-        <button type="submit" className="w-full rounded-md bg-blue-500 p-2">
+        <button type="submit" className="w-52 rounded-md bg-[#B20DFF] p-2">
           Cadastrar
         </button>
       </form>

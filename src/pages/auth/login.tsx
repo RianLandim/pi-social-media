@@ -39,7 +39,7 @@ export default function Login() {
     <main className={'h-screen bg-slate-800 w-screen flex items-center justify-center font-poppins'}>
       <form
         className="p-12 bg-black items-center flex flex-col space-y-4 w-96 h-2/3 rounded-lg">
-        <img className="rounded-md" src="https://i.imgur.com/BhWGMn1.jpg" alt="" />
+        <img className="rounded-md" src="https://i.imgur.com/BhWGMn1.jpg" alt="logo" />
         <div className="flex flex-col space-y-4">
         <h3 className="text-3xl text-white font-bold">Entrar em Paperland</h3>
         <div className="w-full flex flex-row bg-black items-center border border-[#8f8f8f] rounded-md p-1">
@@ -52,7 +52,7 @@ export default function Login() {
         </div>
         <div className="w-full flex flex-row bg-black items-center border border-[#8f8f8f] rounded-md p-1">
           <input
-            className="w-full p-1 rounded-md bg-black"
+            className="w-full p-1 text-white rounded-md bg-black"
             placeholder="Senha"
             type='password'
           />
