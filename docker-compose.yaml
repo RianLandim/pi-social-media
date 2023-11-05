@@ -46,12 +46,16 @@ services:
         NEXT_PUBLIC_CLIENTVAR: "clientvar"
     working_dir: /app
     ports:
-      - "3000"
+      - 3000:3000
     image: t3-app
+    links:
+      - database
     environment:
-      - DATABASE_URL='mysql://root:12345@database:3306/methodus?schema=public'
+      - DATABASE_URL=mysql://root:12345@db/methodus
     env_file:
       - .env
+    networks:
+      - sd_net
 networks:
   sd_net:
     driver: bridge
