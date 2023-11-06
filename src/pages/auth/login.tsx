@@ -47,7 +47,7 @@ export default function Login() {
       >
         <img
           className="rounded-md"
-          src="https://i.imgur.com/BhWGMn1.jpg"
+          src='/img/1f758d35-8ead-43c4-aa20-2d0cba26fbea.jpg'
           alt=""
         />
         <div className="flex flex-col space-y-4">
