@@ -6,12 +6,12 @@ export default function Sidebar() {
   const { data: session } = useSession();
 
   return (
-    <div className="flex h-screen w-1/5 flex-col justify-center bg-black text-white ">
+    <div className="flex h-screen w-1/5 flex-col justify-center bg-black p-2 text-white">
       <div className="mb-12 mt-40 flex justify-center">
         <h1>LOGO</h1>
       </div>
 
-      <div className="mx-auto flex w-56 items-center justify-center rounded-md bg-[#808080] py-2">
+      <div className="mx-auto flex w-56 items-center justify-center rounded-md bg-[#808080] p-2">
         <img
           src={session?.user.image ?? ""}
           className="mr-6 flex items-center rounded-full bg-red-500 p-6 "
