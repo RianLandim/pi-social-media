@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "~/utils/api";
@@ -22,37 +23,43 @@ export default function Register() {
     createUserMutation.mutate(data);
 
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-400 p-8">
+    <div className="flex h-screen w-screen flex-col items-center justify-center bg-slate-800 p-4">
       <h1 className="text-2xl font-bold uppercase text-white">Registre-se</h1>
       <form
         onSubmit={handleSubmit(submit)}
-        className="flex flex-col items-center justify-center space-y-4 rounded-md bg-slate-200 p-8"
+        className="flex w-2/6 flex-col items-center justify-center space-y-4 rounded-md bg-black p-8"
       >
-        <div>
-          <label>Nome</label>
+        <div className="w-full">
+          <label className="text-white">Nome</label>
           <input
             {...register("name")}
             className="w-full rounded-md bg-white p-2"
           />
         </div>
-        <div>
-          <label>Email</label>
+        <div className="w-full">
+          <label className="text-white">Email</label>
           <input
             {...register("email")}
             className="w-full rounded-md bg-white p-2"
           />
         </div>
-        <div>
-          <label>Senha</label>
+        <div className="w-full">
+          <label className="text-white">Senha</label>
           <input
             {...register("password")}
             className="w-full rounded-md bg-white p-2"
             type="password"
           ></input>
         </div>
-        <button type="submit" className="w-full rounded-md bg-blue-500 p-2">
+        <button type="submit" className="w-full rounded-md bg-blue-500 p-3">
           Cadastrar
         </button>
+        <span className="text-sm text-white">
+          Já possui cadastro?{" "}
+          <Link className="text-sm text-blue-400" href="/auth/entrar">
+            Entrar
+          </Link>
+        </span>
       </form>
     </div>
   );

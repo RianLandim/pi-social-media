@@ -31,6 +31,9 @@ model Post {
   user      User       @relation(fields: [userId], references: [id])
   community Community? @relation(fields: [communityId], references: [id])
   file      File[]
+
+  @@index([userId])
+  @@index([communityId])
 }
 
 model Community {
