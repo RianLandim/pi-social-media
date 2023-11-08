@@ -1,6 +1,7 @@
 import { Gear, PaperPlaneTilt, Bell, House } from "@phosphor-icons/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { Avatar } from "./Avatar";
 
 export default function Sidebar() {
   const { data: session } = useSession();
@@ -15,16 +16,13 @@ export default function Sidebar() {
         />
       </div>
 
-      <div className="mx-auto flex w-56 items-center justify-center rounded-md bg-[#808080] p-2">
-        <img
-          src={session?.user.image ?? ""}
-          className="mr-6 flex items-center rounded-full bg-red-500 p-6 "
-        />
+      <div className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-[#808080] p-4">
+        <Avatar url={session?.user.image} name={session?.user.name ?? ""} />
         <div>
           <div className="text-xl font-medium" id="user-name">
             <p>{session?.user.name}</p>
           </div>
-          <div className="font-light opacity-80">
+          <div className="text-xs font-light opacity-80">
             <p>@{session?.user.name}</p>
           </div>
         </div>
