@@ -8,7 +8,11 @@ export default function Sidebar() {
   return (
     <div className="flex h-screen w-1/5 flex-col justify-center bg-black p-2 text-white">
       <div className="mb-12 mt-40 flex justify-center">
-        <h1>LOGO</h1>
+        <img
+          className="w-3/4 rounded-md"
+          src="/img/1f758d35-8ead-43c4-aa20-2d0cba26fbea.jpg"
+          alt="Minha Imagem"
+        />
       </div>
 
       <div className="mx-auto flex w-56 items-center justify-center rounded-md bg-[#808080] p-2">
