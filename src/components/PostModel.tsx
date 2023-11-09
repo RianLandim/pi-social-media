@@ -5,6 +5,7 @@ import {
 } from "@phosphor-icons/react";
 import { Avatar } from "./Avatar";
 import { formatDistanceToNow } from "date-fns";
+import Image from "next/image";
 
 type PostModelProps = {
   username: string;
@@ -46,15 +47,9 @@ export default function PostModel({
               <p>{content}</p>
             </div>
 
-            {files && files.length > 0 && (
-              <div className="mb-5">
-                <img
-                  src=""
-                  alt=""
-                  className="mx-auto h-[20rem] w-[20rem] rounded-md bg-red-500"
-                />
-              </div>
-            )}
+            {files &&
+              files.length > 0 &&
+              files.map((url) => <Image src={url} alt="post-image" />)}
 
             <div className="flex items-center justify-around">
               <p className="flex gap-3">
