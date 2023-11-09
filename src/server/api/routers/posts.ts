@@ -38,19 +38,17 @@ export const postsRouter = createTRPCRouter({
       });
     }),
   list: publicProcedure.query(async ({ ctx }) => {
-    const communities = await ctx.prisma.community.findMany();
-
-    if (!communities) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Nenhuma comunidade encontrada",
-      });
-    }
-
-    return communities;
-  }),
-  listAll: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany();
+    const posts = await ctx.prisma.post.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
 
     if (!posts.length) {
       throw new TRPCError({

@@ -5,6 +5,8 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { NextPage } from "next";
 import { ReactElement, ReactNode } from "react";
+import { setDefaultOptions } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getMainLayout?: (page: ReactElement) => ReactNode;
@@ -13,6 +15,10 @@ export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
 type AppPropsWithLayout = AppProps<{ session: Session | null }> & {
   Component: NextPageWithLayout;
 };
+
+setDefaultOptions({
+  locale: ptBR,
+});
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getMainLayout = Component.getMainLayout ?? ((page) => page);

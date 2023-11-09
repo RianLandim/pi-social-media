@@ -3,67 +3,68 @@ import {
   ChatsCircle,
   ArrowsCounterClockwise,
 } from "@phosphor-icons/react";
+import { Avatar } from "./Avatar";
+import { formatDistanceToNow } from "date-fns";
 
+type PostModelProps = {
+  username: string;
+  profilePhoto?: string;
+  files?: string[];
+  content: string;
+  createdAt: Date;
+};
 
-
-export default function PostModel() {
+export default function PostModel({
+  content,
+  files,
+  username,
+  profilePhoto,
+  createdAt,
+}: PostModelProps) {
   return (
-    <div className="flex w-full flex-col justify-center bg-black py-7 text-white">
-      <div className="flex max-w-full mx-10 justify-end text-lg">
-        <p>&#x2022; &#x2022; &#x2022;</p>
-      </div>
-      <div className="flex justify-center max-w-full">
-        <div className="flex max-w-[75%] flex-col justify-between">
+    <div className="flex w-full flex-col justify-center rounded-md bg-black p-4 text-white">
+      <div className="flex w-full justify-center p-2">
+        <div className="flex w-full flex-col justify-between">
           <div className="flex w-full flex-col">
-            <div className="mb-3 flex w-full">
+            <div className="flex  w-full space-x-4">
               <div>
+                <Avatar url={profilePhoto} name={username} size={48} />
+              </div>
+
+              <div className="flex w-full flex-row  justify-between space-x-4">
+                <div className="flex flex-col">
+                  <p>{username}</p>
+                  <p className="text-xs text-zinc-500">@{username}</p>
+                </div>
+                <p className="justify-self-end text-xs text-zinc-500">
+                  {formatDistanceToNow(createdAt)}
+                </p>
+              </div>
+            </div>
+
+            <div>
+              <p>{content}</p>
+            </div>
+
+            {files && files.length > 0 && (
+              <div className="mb-5">
                 <img
-                  src=''
+                  src=""
                   alt=""
-                  className="mr-7 flex items-center rounded-full bg-red-500 p-6"
+                  className="mx-auto h-[20rem] w-[20rem] rounded-md bg-red-500"
                 />
               </div>
-              {/* Name and @ of user here */}
-              <div className="flex flex-col ">
-                <div className="mb-1.5 flex justify-between ">
-                  <p>John Cena</p>
-                  <div className="flex gap-4 opacity-75">
-                    <p>@John do balde</p>
-                    <p>&#x2022; 2h</p>
-                  </div>
-                </div>
-                {/* here */}
-                <div className="mb-5">
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Tempora earum dignissimos consequuntur porro autem
-                    laboriosam, sequi sunt quidem adipisci vitae, reiciendis,
-                    quaerat voluptas quo. Voluptatibus blanditiis reprehenderit
-                    quasi consequuntur repellat?
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/* IMAGE_POST */}
-            <div className="mb-5">
-              <img
-                src=""
-                alt=""
-                className="h-[20rem] w-[20rem] rounded-md bg-red-500 mx-auto"
-              />
-            </div>
-            {/* STATISTICS */}
-            <div className=" ml-10  flex gap-[6rem]">
+            )}
+
+            <div className="flex items-center justify-around">
               <p className="flex gap-3">
                 <ThumbsUp size={22} /> 200
               </p>
               <p className="flex gap-3">
-                {" "}
                 <ArrowsCounterClockwise size={22} />
                 200
               </p>
               <p className="flex gap-3">
-                {" "}
                 <ChatsCircle size={22} />
                 200
               </p>
