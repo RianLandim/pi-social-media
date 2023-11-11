@@ -1,6 +1,17 @@
 version: "3.8"
 
 services:
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    networks:
+      - sd_net
   database:
     image: mariadb:latest
     container_name: db
@@ -28,7 +39,25 @@ services:
     command: minio server /data --console-address 0.0.0.0:41277
     volumes:
       - ./minio-data:/data
-
+  app:
+    platform: "linux/amd64"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLIENTVAR: "clientvar"
+    working_dir: /app
+    ports:
+      - "3000"
+    image: t3-app
+    links:
+      - database
+    environment:
+      - DATABASE_URL=mysql://root:12345@db/methodus
+    env_file:
+      - .env
+    networks:
+      - sd_net
 networks:
   sd_net:
     driver: bridge
