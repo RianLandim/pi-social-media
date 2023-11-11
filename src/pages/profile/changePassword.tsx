@@ -5,8 +5,9 @@ import { z } from "zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Button } from '../../components/Button'
+import { Button } from '../../components/Button';
 import { api } from "~/utils/api";
+import { Input } from "~/components/Input";
 
 
 const ChangePasswordValidationSchema = z.object({
@@ -16,7 +17,8 @@ const ChangePasswordValidationSchema = z.object({
   if (val.password !== val.password_confirm) {
     ctx.addIssue({
       code: 'custom',
-      message: 'As senhas diferem!'
+      message: 'As senhas diferem!',
+      path: ['password_confirm']
     })
   }
 })
@@ -25,8 +27,8 @@ type Change_PasswordFormData = z.infer<typeof ChangePasswordValidationSchema>
 
 const Settings: NextPageWithLayout = () => {
 
-  const
-    { handleSubmit, register, formState: { errors } } = useForm<Change_PasswordFormData>({
+  const { handleSubmit, register, formState: { errors } } =
+    useForm<Change_PasswordFormData>({
       resolver: zodResolver(ChangePasswordValidationSchema),
       defaultValues: {
         password: '',
@@ -34,28 +36,22 @@ const Settings: NextPageWithLayout = () => {
       }
     })
 
-    // const ChangePasswordMutation = api.communities
+  const ChangePasswordMutation = api.user.update.useMutation()
 
   function submit(data: Change_PasswordFormData) {
     const { password } = data
-    // ChangePasswordMutation.mutate()
-    console.log("OK")
-    // console.log()
+    
+    try {
+      ChangePasswordMutation.mutate({id: '', password: data.password})
+      console.log("OK")
+      
+        // Console log para testes
+        console.log(data)
 
-    //   try {
-    //     const { data } = await  {
-    //       user_name: name,
-    //       password,
-    //       email
-    //     })
-    //     // Console log para testes
-    //     console.log(data)
-
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
-  }
+      } catch (error) {
+        console.log(error)
+      }
+    }
 
   return (
     <div className="flex h-full w-full bg-black text-white">
@@ -75,12 +71,17 @@ const Settings: NextPageWithLayout = () => {
               <div className="flex flex-col gap-1">
                 <label htmlFor="password">Nova Senha</label>
                 <input
-                  className="border-1 h-10 rounded-md border border-solid border-white bg-transparent"
+                  className="border-1 pl-2 h-10 rounded-md border border-solid border-white bg-transparent"
                   type="password"
                   id="password"
                   required
                   {...register('password')}
                 />
+                {!!errors.password &&
+                  <span className="text-red-500 text-sm">
+                    {errors.password.message}
+                    </span>}
+
               </div>
 
               <div className="flex flex-col gap-1">
@@ -88,12 +89,17 @@ const Settings: NextPageWithLayout = () => {
                   Digite novamente a Senha
                 </label>
                 <input
-                  className="border-1 h-10 rounded-md border border-solid border-white bg-transparent"
+                  className="border-1 pl-2 h-10 rounded-md border border-solid border-white bg-transparent"
                   type="password"
                   id="confirmPassword"
                   required
                   {...register('password_confirm')}
                 />
+                {!!errors.password_confirm &&
+                  <span className="text-red-500 text-sm">
+                    {errors.password_confirm.message}
+                  </span>}
+
               </div>
             </div>
 
