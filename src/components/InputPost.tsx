@@ -22,7 +22,7 @@ export function InputPost() {
       },
       {
         onSuccess: () => {
-          utils.post.listAll.invalidate();
+          utils.post.list.invalidate();
         },
       }
     );
