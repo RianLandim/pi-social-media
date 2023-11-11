@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from '../../components/Button';
 import { api } from "~/utils/api";
-import { Input } from "~/components/Input";
 
 
 const ChangePasswordValidationSchema = z.object({
