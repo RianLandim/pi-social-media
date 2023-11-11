@@ -43,7 +43,7 @@ export default function Login() {
       }
     >
       <form
-        onClick={handleSubmit(submit)}
+        onSubmit={handleSubmit(submit)}
         className="flex h-2/3 w-2/6 flex-col items-center space-y-4 rounded-lg bg-black p-4"
       >
         <img

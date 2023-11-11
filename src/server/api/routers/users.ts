@@ -8,6 +8,9 @@ import VerifyEmail from "~/emails/verifyMail";
 import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({
+  // update:protectedProcedure
+  // .input
+  // ,
   create: publicProcedure
     .input(
       z.object({

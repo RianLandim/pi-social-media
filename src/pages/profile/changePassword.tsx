@@ -1,19 +1,72 @@
 import MainLayout, { getMainLayout } from "~/layout/MainLayout";
 import { NextPageWithLayout } from "../_app";
 import Link from "next/link";
+import { z } from "zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { Button } from '../../components/Button'
+import { api } from "~/utils/api";
+
+
+const ChangePasswordValidationSchema = z.object({
+  password: z.string().min(1, 'Senha Obrigatória'),
+  password_confirm: z.string().min(1, 'Senha Obrigatória')
+}).superRefine((val, ctx) => {
+  if (val.password !== val.password_confirm) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'As senhas diferem!'
+    })
+  }
+})
+
+type Change_PasswordFormData = z.infer<typeof ChangePasswordValidationSchema>
 
 const Settings: NextPageWithLayout = () => {
+
+  const
+    { handleSubmit, register, formState: { errors } } = useForm<Change_PasswordFormData>({
+      resolver: zodResolver(ChangePasswordValidationSchema),
+      defaultValues: {
+        password: '',
+        password_confirm: ''
+      }
+    })
+
+    // const ChangePasswordMutation = api.communities
+
+  function submit(data: Change_PasswordFormData) {
+    const { password } = data
+    // ChangePasswordMutation.mutate()
+    console.log("OK")
+    // console.log()
+
+    //   try {
+    //     const { data } = await  {
+    //       user_name: name,
+    //       password,
+    //       email
+    //     })
+    //     // Console log para testes
+    //     console.log(data)
+
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
+    // }
+  }
+
   return (
     <div className="flex h-full w-full bg-black text-white">
       <div className="my-32 flex w-2/5	 flex-col items-center border-2 text-lg font-medium">
-        <p className="w-4/5 rounded-md bg-red-500 py-2 pl-10	">Conta</p>
+        <p className="w-4/5 rounded-md bg-red-500 py-2 pl-10">Conta</p>
       </div>
 
       <div className="my-32 flex w-full flex-col justify-center border-2 pl-28">
         <div className="flex w-full">
           <form
-            action="submit"
-            method="post"
+            onSubmit={handleSubmit(submit)}
             name="signupForm"
             id="signupForm"
             className="flex w-2/5 flex-col gap-8 text-lg"
@@ -25,8 +78,8 @@ const Settings: NextPageWithLayout = () => {
                   className="border-1 h-10 rounded-md border border-solid border-white bg-transparent"
                   type="password"
                   id="password"
-                  name="password"
                   required
+                  {...register('password')}
                 />
               </div>
 
@@ -38,8 +91,8 @@ const Settings: NextPageWithLayout = () => {
                   className="border-1 h-10 rounded-md border border-solid border-white bg-transparent"
                   type="password"
                   id="confirmPassword"
-                  name="confirmPassword"
                   required
+                  {...register('password_confirm')}
                 />
               </div>
             </div>
@@ -51,13 +104,12 @@ const Settings: NextPageWithLayout = () => {
               >
                 <p>Cancelar</p>
               </Link>
-              <button
+              <Button
                 className="w-32 rounded-md bg-red-700 py-1 text-center"
                 type="submit"
-                id="submitButton"
-              >
-                <p>Confirmar</p>
-              </button>
+                id="submitButton">
+                Confirmar
+              </Button>
             </div>
           </form>
         </div>
