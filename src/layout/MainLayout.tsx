@@ -1,4 +1,5 @@
 import { ReactElement, ReactNode } from "react";
+import Communities from "~/components/Communities";
 import PostModel from "~/components/PostModel";
 import Sidebar from "~/components/Sidebar";
 
@@ -13,6 +14,7 @@ export default function MainLayout({ children }: Props) {
       <section className="flex h-screen w-full flex-col items-center bg-zinc-400 p-4 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
         {children}
       </section>
+      <Communities />
     </main>
   );
 }

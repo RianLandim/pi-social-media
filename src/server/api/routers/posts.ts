@@ -21,43 +21,34 @@ export const postsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        title: z.string(),
-        files: z.array(fileName),
+        files: z.array(fileName).optional(),
         content: z.string(),
         communityId: z.string().cuid(),
-        djashj: z.string(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.$transaction(async (prisma) => {
         const post = await prisma.post.create({
           data: {
-            title: input.title,
             content: input.content,
             communityId: input.communityId,
             userId: ctx.session.user.id,
           },
         });
-
-        for (const file of input.files) {
-          console.log(file, post);
-        }
       });
     }),
   list: publicProcedure.query(async ({ ctx }) => {
-    const communities = await ctx.prisma.community.findMany();
-
-    if (!communities) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Nenhuma comunidade encontrada",
-      });
-    }
-
-    return communities;
-  }),
-  listAll: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany();
+    const posts = await ctx.prisma.post.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
 
     if (!posts.length) {
       throw new TRPCError({

@@ -17,7 +17,7 @@ const Settings: NextPageWithLayout = () => {
           <img
             src=""
             alt=""
-            className="h-64 aspect-square rounded-full bg-red-500"
+            className="aspect-square h-64 rounded-full bg-red-500"
           />
           <div className="ml-24 flex flex-col text-2xl justify-center">
             {/* INFORMAÇOES DO USER */}
@@ -38,16 +38,17 @@ const Settings: NextPageWithLayout = () => {
             href={'/profile/edit_profile'}>
             <h1>Editar Perfil</h1>
           </Link>
-          <Link className="underline self-center"
-            href={'/profile/change_password'}>
+          <Link
+            className="self-center underline"
+            href={"/profile/change_password"}
+          >
             <h1>Mudar Senha</h1>
           </Link>
         </div>
-
       </div>
     </div>
   );
 };
 
-Settings.getLayout = getMainLayout;
+Settings.getMainLayout = getMainLayout;
 export default Settings;

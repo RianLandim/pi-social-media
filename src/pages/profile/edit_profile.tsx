@@ -1,12 +1,11 @@
 import MainLayout, { getMainLayout } from "~/layout/MainLayout";
-import { NextPageWithLayout } from '../_app'
+import { NextPageWithLayout } from "../_app";
 import Link from "next/link";
 import React, { useState, ChangeEvent } from "react";
 
-
 const Settings: NextPageWithLayout = () => {
   // Colocar estados do USER logado.
-  const [image, setImage] = useState('')
+  const [image, setImage] = useState("");
   const [name, setName] = useState("John Cena");
   const [email, setEmail] = useState("johncenaaaaa@smoke.com");
 
@@ -26,7 +25,7 @@ const Settings: NextPageWithLayout = () => {
         setImage(imageUrl);
       }
     }
-  }
+  };
 
   return (
     <div className="flex h-full w-full bg-black text-white px-10">
@@ -42,21 +41,28 @@ const Settings: NextPageWithLayout = () => {
         <form className="flex flex-col">
           <div className="flex ">
             {/* IMG DO USER */}
-            <label htmlFor="imageInput" className="cursor-pointer h-64 aspect-square rounded-full">
+            <label
+              htmlFor="imageInput"
+              className="aspect-square h-64 cursor-pointer rounded-full"
+            >
               <img
-                src={image ||
-                  'https://isobarscience-1bfd8.kxcdn.com/wp-content/uploads/2020/09/default-profile-picture1.jpg'}
+                src={
+                  image ||
+                  "https://isobarscience-1bfd8.kxcdn.com/wp-content/uploads/2020/09/default-profile-picture1.jpg"
+                }
                 alt=""
-                className="h-64 aspect-square rounded-full bg-red-500"
+                className="aspect-square h-64 rounded-full bg-red-500"
               />
             </label>
-            <input type="file"
+            <input
+              type="file"
               id="imageInput"
               accept="image/*"
-              style={{ display: 'none' }}
-              onChange={handleImageChange} />
+              style={{ display: "none" }}
+              onChange={handleImageChange}
+            />
 
-            <div className="ml-10 flex flex-col justify-center w-2/4">
+            <div className="ml-10 flex w-2/4 flex-col justify-center">
               {/* INFORMAÇOES DO USER */}
               <div className="mb-5 text-xl flex flex-col gap-5 justify-self-end">
                 <div className="flex-col flex grow">
@@ -65,7 +71,8 @@ const Settings: NextPageWithLayout = () => {
                     className="px-2 ml-10 h-10 flex w-auto bg-transparent border border-solid border-white border-1 rounded-md"
                     type="text" value={name}
                     onChange={handleNameChange}
-                    placeholder="Nome" />
+                    placeholder="Nome"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <label className="mb-3" htmlFor="email">Email</label>
@@ -73,15 +80,21 @@ const Settings: NextPageWithLayout = () => {
                     className="px-2 ml-10 h-10 border w-auto border-white bg-transparent rounded-md"
                     type="text" value={email}
                     onChange={handleEmailChange}
-                    placeholder="Email" />
+                    placeholder="Email"
+                  />
                 </div>
               </div>
-              <div className="flex self-end justify-self-center gap-4 mt-5">
-                <button type="submit" className="px-8 py-2 bg-red-700 rounded-lg">
+              <div className="mt-5 flex gap-4 self-end justify-self-center">
+                <button
+                  type="submit"
+                  className="rounded-lg bg-red-700 px-8 py-2"
+                >
                   Salvar
                 </button>
-                <Link className="px-8 py-2 border-solid border-2 border-red-700 rounded-lg"
-                  href={'/profile/settings'}>
+                <Link
+                  className="rounded-lg border-2 border-solid border-red-700 px-8 py-2"
+                  href={"/profile/settings"}
+                >
                   <p>Voltar</p>
                 </Link>
               </div>
@@ -90,8 +103,8 @@ const Settings: NextPageWithLayout = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-Settings.getLayout = getMainLayout
-export default Settings
+Settings.getMainLayout = getMainLayout;
+export default Settings;
