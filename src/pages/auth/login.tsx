@@ -39,9 +39,9 @@ export default function Login() {
     <main className={'h-screen bg-slate-800 w-screen flex items-center justify-center font-poppins'}>
       <form
         className="p-12 bg-black items-center flex flex-col space-y-4 w-96 h-2/3 rounded-lg">
-        <img className="rounded-md" src="https://i.imgur.com/BhWGMn1.jpg" alt="" />
-        <div className="flex flex-col space-y-4">
-        <h3 className="text-3xl text-white font-bold">Entrar em Paperland</h3>
+        <img className="rounded-md" src="/img/1f758d35-8ead-43c4-aa20-2d0cba26fbea.jpg" alt="" />
+        <div className="flex flex-col w-full space-y-4">
+        <h3 className="my-3 text-3xl text-white font-bold">Entrar em Paperland</h3>
         <div className="w-full flex flex-row bg-black items-center border border-[#8f8f8f] rounded-md p-1">
           <input
             className="w-full p-1 bg-black text-white"
@@ -52,7 +52,7 @@ export default function Login() {
         </div>
         <div className="w-full flex flex-row bg-black items-center border border-[#8f8f8f] rounded-md p-1">
           <input
-            className="w-full p-1 rounded-md bg-black"
+            className="w-full text-white p-1 rounded-md bg-black"
             placeholder="Senha"
             type='password'
           />
@@ -61,8 +61,8 @@ export default function Login() {
         <button className="w-52 p-2 bg-[#B20DFF] rounded-md hover:bg-[#f719be]" >
           <span className="text-white font-bold">Entrar</span>
         </button>
-        <button className="w-52 p-2 bg- rounded-md border-solid border hover:bg-[#333333]" >
-          <span className="text-white font-bold">Esqueceu a senha?</span>
+        <button className="" >
+          <span className="text-blue-400">Esqueceu a senha?</span>
         </button>
         <span className="text-white"> 
           Criar conta? <a className="text-blue-400" href="">Inscreva-se</a> 
