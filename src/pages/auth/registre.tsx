@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { api } from "~/utils/api";
@@ -54,6 +55,12 @@ export default function Register() {
         <button type="submit" className="w-52 rounded-md bg-[#B20DFF] p-2">
           Cadastrar
         </button>
+        <span className="text-sm text-white">
+          Já possui cadastro?{" "}
+          <Link className="text-sm text-blue-400" href="/auth/entrar">
+            Entrar
+          </Link>
+        </span>
       </form>
     </div>
   );

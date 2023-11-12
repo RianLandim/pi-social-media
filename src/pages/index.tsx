@@ -1,20 +1,22 @@
-import { signOut, useSession } from "next-auth/react";
-import Avatar from "boring-avatars";
-import { SignOut } from "@phosphor-icons/react";
+import { useSession } from "next-auth/react";
+
 import { api } from "~/utils/api";
 import { InputPost } from "~/components/InputPost";
 import { match } from "ts-pattern";
 import LoadingIndicator from "~/components/ui/LoadingIndicator";
 import { NextPageWithLayout } from "./_app";
 import { getMainLayout } from "~/layout/MainLayout";
+import PostModel from "~/components/PostModel";
 
 const Feed: NextPageWithLayout = () => {
-  const postsQuery = api.post.listAll.useQuery();
+  useSession({ required: true });
+
+  const postsQuery = api.post.list.useQuery();
 
   return (
     <>
       <InputPost />
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         {match(postsQuery)
           .with({ isLoading: true }, () => <LoadingIndicator />)
           .with({ isError: true }, () => (
@@ -22,9 +24,12 @@ const Feed: NextPageWithLayout = () => {
           ))
           .otherwise(({ data }) => {
             return data.map((item) => (
-              <ul className="flex flex-col items-center justify-center">
-                <li>{item.title}</li>
-                <li>{item.content}</li>
+              <ul className="flex w-3/4 flex-col items-center justify-center p-4">
+                <PostModel
+                  content={item.content}
+                  createdAt={item.createdAt}
+                  username={item.user.name ?? ""}
+                />
               </ul>
             ));
           })}
@@ -33,6 +38,6 @@ const Feed: NextPageWithLayout = () => {
   );
 };
 
-Feed.getLayout = getMainLayout;
+Feed.getMainLayout = getMainLayout;
 
 export default Feed;

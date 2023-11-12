@@ -1,26 +1,28 @@
 import { Gear, PaperPlaneTilt, Bell, House } from "@phosphor-icons/react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { Avatar } from "./Avatar";
 
 export default function Sidebar() {
   const { data: session } = useSession();
 
   return (
-    <div className="flex h-screen w-1/5 flex-col justify-center bg-black text-white ">
+    <div className="flex h-screen w-1/5 flex-col justify-center bg-black p-2 text-white">
       <div className="mb-12 mt-40 flex justify-center">
-        <h1>LOGO</h1>
+        <img
+          className="w-3/4 rounded-md"
+          src="/img/1f758d35-8ead-43c4-aa20-2d0cba26fbea.jpg"
+          alt="Minha Imagem"
+        />
       </div>
 
-      <div className="mx-auto flex w-56 items-center justify-center rounded-md bg-[#808080] py-2">
-        <img
-          src={session?.user.image ?? ""}
-          className="mr-6 flex items-center rounded-full bg-red-500 p-6 "
-        />
+      <div className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-zinc-600 p-4">
+        <Avatar url={session?.user.image} name={session?.user.name ?? ""} />
         <div>
           <div className="text-xl font-medium" id="user-name">
             <p>{session?.user.name}</p>
           </div>
-          <div className="font-light opacity-80">
+          <div className="text-xs font-light opacity-80">
             <p>@{session?.user.name}</p>
           </div>
         </div>
@@ -50,7 +52,7 @@ export default function Sidebar() {
             Mensagens
           </Link>
           <Link
-            href={'profile/settings'}
+            href={"profile/settings"}
             className="mb-24 flex	items-center rounded-md  p-2 text-lg hover:bg-slate-800"
           >
             <Gear size={20} className="mr-2.5" />
@@ -60,10 +62,12 @@ export default function Sidebar() {
       </div>
 
       <div className="mb-20 flex justify-center">
-        <a
-          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]">
+        <button
+          onClick={() => signOut()}
+          className="br rounded-md border-2 border-solid	border-[#808080] px-6 py-2 hover:bg-[#808080]"
+        >
           Sair
-        </a>
+        </button>
       </div>
     </div>
   );
