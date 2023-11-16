@@ -40,6 +40,23 @@ export const postsRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
       include: {
+        replyed: {
+          select: {
+            _count: true,
+          },
+        },
+        reply: {
+          select: {
+            id: true,
+            content: true,
+          },
+        },
+        file: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
         user: {
           select: {
             id: true,

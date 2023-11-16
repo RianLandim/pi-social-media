@@ -25,11 +25,7 @@ const Feed: NextPageWithLayout = () => {
           .otherwise(({ data }) => {
             return data.map((item) => (
               <ul className="flex w-3/4 flex-col items-center justify-center p-4">
-                <PostModel
-                  content={item.content}
-                  createdAt={item.createdAt}
-                  username={item.user.name ?? ""}
-                />
+                <PostModel post={item} />
               </ul>
             ));
           })}
