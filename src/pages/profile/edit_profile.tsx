@@ -2,30 +2,84 @@ import MainLayout, { getMainLayout } from "~/layout/MainLayout";
 import { NextPageWithLayout } from "../_app";
 import Link from "next/link";
 import React, { useState, ChangeEvent } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { api } from "~/utils/api";
 
+
+const EditProfileValidationSchema = z.object({
+  name: z.string().min(1, 'Insira um nome'),
+  email: z.string().min(1, 'Insira um email'),
+  image: z
+    .custom((file) => {
+      if (!(file instanceof File)) {
+        return 'O arquivo deve ser uma imagem (JPEG, PNG, GIF)';
+      }
+
+      const allowedImageTypes = ["image/jpeg", "image/png"]
+
+      if (!allowedImageTypes.includes(file.type)) {
+        return 'O arquivo deve ser uma imagem (JPEG, PNG, GIF)'
+      }
+
+      return true;
+    }, { message: 'O arquivo deve ser uma imagem (JPEG, PNG)' })
+})
+
+type Edit_ProfileFormData = z.infer<typeof EditProfileValidationSchema>
+
+// Colocar estados do USER logado.
 const Settings: NextPageWithLayout = () => {
-  // Colocar estados do USER logado.
-  const [image, setImage] = useState("");
-  const [name, setName] = useState("John Cena");
-  const [email, setEmail] = useState("johncenaaaaa@smoke.com");
+  const { handleSubmit,
+    register,
+    formState: { errors },
+    setValue
+  } =
+    useForm<Edit_ProfileFormData>({
+      resolver: zodResolver(EditProfileValidationSchema),
+      defaultValues: {
+        name: '',
+        email: '',
+        image: ''
+      }
+    })
 
-  const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
+  const [image, setImage] = useState<string | null>(null);
 
-  const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target) {
       const file = event.target.files?.[0];
       if (file) {
         const imageUrl = URL.createObjectURL(file);
         setImage(imageUrl);
+        await setValue('image', file);
       }
     }
   };
+
+  const Edit_ProfileMutation = api.user.updata_profile_infos.useMutation()
+
+  function edit_submit(data: Edit_ProfileFormData) {
+    // ROTA CRIADA NO BACK
+    try {
+      Edit_ProfileMutation.mutate
+        ({
+          id: '', name: data.name,
+          email: data.email,
+          image: data.image
+        })
+
+      console.log("OK")
+
+      // Console log para testes
+      console.log(data)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   return (
     <div className="flex h-full w-full bg-black text-white px-10">
@@ -38,20 +92,22 @@ const Settings: NextPageWithLayout = () => {
           <h1 className=" text-3xl">Editar Informações</h1>
         </div>
 
-        <form className="flex flex-col">
-          <div className="flex ">
+        <form onSubmit={handleSubmit(edit_submit)}
+          className="flex flex-col"
+          name="edit_profile"
+          id="edit_profile">
+
+          <div className="flex">
             {/* IMG DO USER */}
             <label
               htmlFor="imageInput"
-              className="aspect-square h-64 cursor-pointer rounded-full"
-            >
+              className="aspect-square h-64 cursor-pointer rounded-full">
               <img
                 src={
                   image ||
                   "https://isobarscience-1bfd8.kxcdn.com/wp-content/uploads/2020/09/default-profile-picture1.jpg"
                 }
-                alt=""
-                className="aspect-square h-64 rounded-full bg-red-500"
+                className="object-cover h-64 rounded-full bg-red-500"
               />
             </label>
             <input
@@ -59,8 +115,16 @@ const Settings: NextPageWithLayout = () => {
               id="imageInput"
               accept="image/*"
               style={{ display: "none" }}
-              onChange={handleImageChange}
+              {...register('image')}
+
             />
+            {!!errors.image?.message && (
+              <span className="text-red-500 text-sm">
+                {typeof errors.image.message === "string"
+                  ? errors.image.message
+                  : `An error occurred: ${errors.image.message.message}`}
+              </span>
+            )}
 
             <div className="ml-10 flex w-2/4 flex-col justify-center">
               {/* INFORMAÇOES DO USER */}
@@ -69,34 +133,41 @@ const Settings: NextPageWithLayout = () => {
                   <label className="mb-3" htmlFor="name">Nome</label>
                   <input id="name"
                     className="px-2 ml-10 h-10 flex w-auto bg-transparent border border-solid border-white border-1 rounded-md"
-                    type="text" value={name}
-                    onChange={handleNameChange}
+                    type="text"
                     placeholder="Nome"
+                    {...register('name')}
                   />
+                  {!!errors.name &&
+                    <span className="text-red-500 text-sm">
+                      {errors.name.message}
+                    </span>}
                 </div>
                 <div className="flex flex-col">
                   <label className="mb-3" htmlFor="email">Email</label>
                   <input id="email"
                     className="px-2 ml-10 h-10 border w-auto border-white bg-transparent rounded-md"
-                    type="text" value={email}
-                    onChange={handleEmailChange}
+                    type="text"
                     placeholder="Email"
+                    {...register('email')}
                   />
+                  {!!errors.email &&
+                    <span className="text-red-500 text-sm">
+                      {errors.email.message}
+                    </span>}
                 </div>
               </div>
               <div className="mt-5 flex gap-4 self-end justify-self-center">
                 <button
                   type="submit"
-                  className="rounded-lg bg-red-700 px-8 py-2"
-                >
+                  className="rounded-lg bg-red-700 px-8 py-2">
                   Salvar
                 </button>
                 <Link
                   className="rounded-lg border-2 border-solid border-red-700 px-8 py-2"
-                  href={"/profile/settings"}
-                >
+                  href={"/profile/settings"}>
                   <p>Voltar</p>
                 </Link>
+
               </div>
             </div>
           </div>
