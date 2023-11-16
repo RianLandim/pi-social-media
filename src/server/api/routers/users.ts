@@ -7,32 +7,14 @@ import { render } from "@react-email/components";
 import VerifyEmail from "~/emails/verifyMail";
 import { TRPCError } from "@trpc/server";
 
-export const userRouter = createTRPCRouter({
-  updata_profile_infos: protectedProcedure
-    .input(z.object({
-      name: z.string(),
-      email: z.string(),
-      id: z.string(),
-      image: z.string(),
-    })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.update({
-        where: {
-          id: input.id
-        },
-        data: {
-          email: input.email,
-          name: input.name,
-          image: input.image
-        },
-      })
-    })
-  ,
 
+export const userRouter = createTRPCRouter({
   update: protectedProcedure
     .input(z.object({
-      password: z.string(),
+      name: z.string().optional(),
+      email: z.string().optional(),
+      image: z.string().optional(),
+      password: z.string().optional(),
       id: z.string()
     })
     )
@@ -42,12 +24,15 @@ export const userRouter = createTRPCRouter({
           id: input.id
         },
         data: {
-          password: hashSync(input.password, 10)
+          password: hashSync(input.password ?? "", 10),
+          email: input.email,
+          name: input.name,
+          image: input.image
         }
       })
     })
-
   ,
+
   create: publicProcedure
     .input(
       z.object({
@@ -90,4 +75,26 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+
+  // update_profile_infos: protectedProcedure
+  //   .input(z.object({
+  //     name: z.string(),
+  //     email: z.string(),
+  //     id: z.string(),
+  //     image: z.string(),
+  //   })
+  //   )
+  //   .mutation(async ({ ctx, input }) => {
+  //     const user = await ctx.prisma.user.update({
+  //       where: {
+  //         id: input.id
+  //       },
+  //       data: {
+  //         email: input.email,
+  //         name: input.name,
+  //         image: input.image
+  //       },
+  //     })
+  //   })
+  // ,
 });

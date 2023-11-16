@@ -22,12 +22,12 @@ const ChangePasswordValidationSchema = z.object({
   }
 })
 
-type Change_PasswordFormData = z.infer<typeof ChangePasswordValidationSchema>
+type ChangePasswordFormData = z.infer<typeof ChangePasswordValidationSchema>
 
 const Settings: NextPageWithLayout = () => {
 
   const { handleSubmit, register, formState: { errors } } =
-    useForm<Change_PasswordFormData>({
+    useForm<ChangePasswordFormData>({
       resolver: zodResolver(ChangePasswordValidationSchema),
       defaultValues: {
         password: '',
@@ -37,7 +37,7 @@ const Settings: NextPageWithLayout = () => {
 
   const ChangePasswordMutation = api.user.update.useMutation()
 
-  function submit(data: Change_PasswordFormData) {
+  function submit(data: ChangePasswordFormData) {
     const { password } = data
     
     try {

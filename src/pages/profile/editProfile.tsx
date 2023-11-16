@@ -27,7 +27,7 @@ const EditProfileValidationSchema = z.object({
     }, { message: 'O arquivo deve ser uma imagem (JPEG, PNG)' })
 })
 
-type Edit_ProfileFormData = z.infer<typeof EditProfileValidationSchema>
+type EditProfileFormData = z.infer<typeof EditProfileValidationSchema>
 
 // Colocar estados do USER logado.
 const Settings: NextPageWithLayout = () => {
@@ -36,7 +36,7 @@ const Settings: NextPageWithLayout = () => {
     formState: { errors },
     setValue
   } =
-    useForm<Edit_ProfileFormData>({
+    useForm<EditProfileFormData>({
       resolver: zodResolver(EditProfileValidationSchema),
       defaultValues: {
         name: '',
@@ -58,12 +58,12 @@ const Settings: NextPageWithLayout = () => {
     }
   };
 
-  const Edit_ProfileMutation = api.user.updata_profile_infos.useMutation()
+  const EditProfileMutation = api.user.update.useMutation()
 
-  function edit_submit(data: Edit_ProfileFormData) {
+  function edit_submit(data: EditProfileFormData) {
     // ROTA CRIADA NO BACK
     try {
-      Edit_ProfileMutation.mutate
+      EditProfileMutation.mutate
         ({
           id: '', name: data.name,
           email: data.email,
