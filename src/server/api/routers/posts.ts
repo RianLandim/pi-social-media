@@ -85,6 +85,32 @@ export const postsRouter = createTRPCRouter({
   like: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
+      const isAlreadyLike = await ctx.prisma.post.findFirst({
+        where: {
+          liked: {
+            some: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+
+      if (isAlreadyLike) {
+        await ctx.prisma.post.update({
+          where: {
+            id: input.postId,
+          },
+          data: {
+            liked: {
+              disconnect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+        });
+        return;
+      }
+
       await ctx.prisma.post.update({
         where: {
           id: input.postId,

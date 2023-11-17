@@ -63,4 +63,21 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+
+  listLikedPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        likedPosts: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    return posts;
+  }),
 });

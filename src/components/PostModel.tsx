@@ -7,7 +7,7 @@ import { Avatar } from "./Avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { RouterInputs, RouterOutputs, api } from "~/utils/api";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
 
 type PostModel = NonNullable<RouterOutputs["post"]["list"][number]>;
@@ -17,7 +17,23 @@ type PostModelProps = {
 };
 
 export default function PostModel({ post }: PostModelProps) {
-  const likePostMutation = api.post.like.useMutation();
+  const [liked, setLiked] = useState(false);
+
+  const likePostMutation = api.post.like.useMutation({
+    onSettled: () => {
+      setLiked(!liked);
+    },
+  });
+
+  const { data } = api.user.listLikedPosts.useQuery();
+
+  useEffect(() => {
+    if (data?.likedPosts) {
+      const isLiked = data?.likedPosts.some((p) => p.id == post.id);
+
+      setLiked(isLiked);
+    }
+  }, [data]);
 
   const parent = useRef(null);
 
@@ -29,7 +45,10 @@ export default function PostModel({ post }: PostModelProps) {
     likePostMutation.mutate(data);
 
   return (
-    <div className="flex w-full flex-col justify-center rounded-md bg-black p-4 text-white">
+    <div
+      ref={parent}
+      className="flex w-full flex-col justify-center rounded-md bg-black p-4 text-white"
+    >
       <div className="flex w-full justify-center p-2">
         <div className="flex w-full flex-col justify-between">
           <div className="flex w-full flex-col">
@@ -68,7 +87,12 @@ export default function PostModel({ post }: PostModelProps) {
                 onClick={() => likePost({ postId: post.id })}
                 className="flex gap-3 hover:cursor-pointer"
               >
-                <ThumbsUp size={22} /> {post.liked.length}
+                <ThumbsUp
+                  size={22}
+                  color={liked ? "green" : undefined}
+                  weight={liked ? "fill" : undefined}
+                />
+                {post.liked.length}
               </p>
               <p className="flex gap-3">
                 <ArrowsCounterClockwise size={22} />
