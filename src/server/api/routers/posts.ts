@@ -40,6 +40,11 @@ export const postsRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
       include: {
+        liked: {
+          select: {
+            id: true,
+          },
+        },
         replyed: {
           select: {
             _count: true,
@@ -76,4 +81,21 @@ export const postsRouter = createTRPCRouter({
 
     return posts;
   }),
+
+  like: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.post.update({
+        where: {
+          id: input.postId,
+        },
+        data: {
+          liked: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
 });
