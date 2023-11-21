@@ -31,9 +31,16 @@ model Post {
   user      User       @relation(fields: [userId], references: [id])
   community Community? @relation(fields: [communityId], references: [id])
   file      File[]
+  reply     Post[]     @relation(name: "postReply")
+
+  liked User[] @relation(name: "userLikedPosts")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+  replyed   Post[]   @relation(name: "postReply")
+
+  @@index([userId])
+  @@index([communityId])
 }
 
 model Community {
@@ -85,6 +92,8 @@ model User {
   myCommunities Community[] @relation("creators")
   communities   Community[] @relation("members")
   Post          Post[]
+  likedPosts    Post[]      @relation("userLikedPosts")
+  postId        String?
 }
 
 model VerificationToken {

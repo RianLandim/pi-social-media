@@ -39,7 +39,7 @@ RUN \
 
 ##### RUNNER
 
-FROM --platform=linux/amd64 node:16-alpine3.17 AS runner
+FROM --platform=linux/amd64 node:latest AS runner
 WORKDIR /app
 
 ENV NODE_ENV production

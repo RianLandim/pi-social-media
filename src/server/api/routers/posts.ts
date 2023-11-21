@@ -40,6 +40,28 @@ export const postsRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
     const posts = await ctx.prisma.post.findMany({
       include: {
+        liked: {
+          select: {
+            id: true,
+          },
+        },
+        replyed: {
+          select: {
+            _count: true,
+          },
+        },
+        reply: {
+          select: {
+            id: true,
+            content: true,
+          },
+        },
+        file: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
         user: {
           select: {
             id: true,
@@ -59,4 +81,47 @@ export const postsRouter = createTRPCRouter({
 
     return posts;
   }),
+
+  like: protectedProcedure
+    .input(z.object({ postId: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      const isAlreadyLike = await ctx.prisma.post.findFirst({
+        where: {
+          liked: {
+            some: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+
+      if (isAlreadyLike) {
+        await ctx.prisma.post.update({
+          where: {
+            id: input.postId,
+          },
+          data: {
+            liked: {
+              disconnect: {
+                id: ctx.session.user.id,
+              },
+            },
+          },
+        });
+        return;
+      }
+
+      await ctx.prisma.post.update({
+        where: {
+          id: input.postId,
+        },
+        data: {
+          liked: {
+            connect: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+      });
+    }),
 });

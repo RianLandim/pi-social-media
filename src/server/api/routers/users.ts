@@ -17,6 +17,19 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const isAlreadyUser = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (isAlreadyUser) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Usuário já registrado",
+        });
+      }
+
       const user = await ctx.prisma.user.create({
         data: {
           email: input.email,
@@ -50,4 +63,21 @@ export const userRouter = createTRPCRouter({
 
       return user;
     }),
+
+  listLikedPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        likedPosts: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    return posts;
+  }),
 });

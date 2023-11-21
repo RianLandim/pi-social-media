@@ -18,13 +18,32 @@ services:
     ports:
       - 3307:3306
     environment:
-      - MARIADB_DATABASE=methodus
+      - MARIADB_DATABASE=paperland
       - MARIADB_PORT=3306
       - MARIADB_ROOT_PASSWORD=12345
     volumes:
-      - data:/var/lib/mysql
+      - "./init/master:/docker-entrypoint-initdb.d"
+      - "./conf/master:/etc/mysql/conf.d"
+      - "./data/master:/var/lib/mysql"
     networks:
       - sd_net
+  database-backup:
+    image: mariadb:latest
+    container_name: db-backup
+    environment:
+      - MARIADB_MASTER_ROOT_PASSWORD=12345
+      - MARIADB_ROOT_PASSWORD=12345
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - "./init/replica:/docker-entrypoint-initdb.d"
+      - "./conf/replica:/etc/mysql/conf.d"
+      - "./data/replica:/var/lib/mysql"
+    depends_on:
+      - database
+    networks:
+      - sd_net
+    links:
+      - database
   storage:
     image: minio/minio
     container_name: sd-minio
@@ -50,10 +69,8 @@ services:
     ports:
       - "3000"
     image: t3-app
-    links:
-      - database
     environment:
-      - DATABASE_URL=mysql://root:12345@db/methodus
+      - DATABASE_URL=mysql://root:12345@db/paperland
     env_file:
       - .env
     networks:
@@ -63,4 +80,6 @@ networks:
     driver: bridge
 volumes:
   data:
+    driver: local
+  data-backup:
     driver: local
