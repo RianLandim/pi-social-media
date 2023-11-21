@@ -2,13 +2,16 @@ import {
   ThumbsUp,
   ChatsCircle,
   ArrowsCounterClockwise,
+  UserPlus,
 } from "@phosphor-icons/react";
 import { Avatar } from "./Avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { RouterInputs, RouterOutputs, api } from "~/utils/api";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
+import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
 
 type PostModel = NonNullable<RouterOutputs["post"]["list"][number]>;
 
@@ -19,13 +22,19 @@ type PostModelProps = {
 export default function PostModel({ post }: PostModelProps) {
   const [liked, setLiked] = useState(false);
 
+  const apiContext = api.useContext();
+  const { data: session } = useSession();
+
   const likePostMutation = api.post.like.useMutation({
     onSettled: () => {
-      setLiked(!liked);
+      void apiContext.post.list.invalidate();
     },
   });
 
+  const followMutation = api.user.follow.useMutation();
+
   const { data } = api.user.listLikedPosts.useQuery();
+  const { data: myFollowers } = api.user.listMyFollowers.useQuery();
 
   useEffect(() => {
     if (data?.likedPosts) {
@@ -44,6 +53,18 @@ export default function PostModel({ post }: PostModelProps) {
   const likePost = (data: RouterInputs["post"]["like"]) =>
     likePostMutation.mutate(data);
 
+  const follow = useCallback(
+    (data: RouterInputs["user"]["follow"]) => followMutation.mutate(data),
+    []
+  );
+
+  const handleFollowers = useCallback(() => {
+    return (
+      session?.user.id !== post.userId ||
+      myFollowers?.some((item) => item.id === post.userId)
+    );
+  }, []);
+
   return (
     <div
       ref={parent}
@@ -52,7 +73,7 @@ export default function PostModel({ post }: PostModelProps) {
       <div className="flex w-full justify-center p-2">
         <div className="flex w-full flex-col justify-between">
           <div className="flex w-full flex-col">
-            <div className="flex  w-full space-x-4">
+            <div className="flex w-full space-x-4">
               <div>
                 <Avatar
                   url={post.user.image ?? undefined}
@@ -61,15 +82,26 @@ export default function PostModel({ post }: PostModelProps) {
                 />
               </div>
 
-              <div className="flex w-full flex-row  justify-between space-x-4">
+              <div className="flex w-full flex-row items-center justify-between space-x-2">
                 <div className="flex flex-col">
                   <p>{post.user.name ?? ""}</p>
                   <p className="text-xs text-zinc-500">
                     @{post.user.name ?? ""}
                   </p>
                 </div>
-                <p className="justify-self-end text-xs text-zinc-500">
+                <p className="items-center justify-self-end text-xs text-zinc-500">
                   {formatDistanceToNow(post.createdAt)}
+                  {handleFollowers() && (
+                    <div
+                      className="mb-2 ml-2 inline-flex rounded-md text-sm"
+                      onClick={() => follow({ userId: post.userId })}
+                    >
+                      <UserPlus
+                        className="hover:cursor-pointer hover:text-white"
+                        size={20}
+                      />
+                    </div>
+                  )}
                 </p>
               </div>
             </div>

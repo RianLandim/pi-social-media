@@ -80,7 +80,6 @@ export const userRouter = createTRPCRouter({
 
     return posts;
   }),
-
   follow: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -124,4 +123,17 @@ export const userRouter = createTRPCRouter({
         },
       });
     }),
+
+  listMyFollowers: protectedProcedure.query(async ({ ctx }) => {
+    const followers = await ctx.prisma.user.findFirst({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        followers: true,
+      },
+    });
+
+    return followers?.followers;
+  }),
 });

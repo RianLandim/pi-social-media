@@ -12,7 +12,7 @@ export function InputPost() {
     defaultValues: { description: "" },
   });
 
-  const utils = api.useUtils();
+  const utils = api.useContext();
   const postSubmitMutation = api.post.create.useMutation();
   const submit: SubmitHandler<formSchemaProps> = (data) => {
     postSubmitMutation.mutate(
