@@ -8,7 +8,7 @@ await import("./src/env.mjs");
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  output: 'standalone',
+  output: "standalone",
   /**
    * If you are using `appDir` then you must comment the below `i18n` config out.
    *

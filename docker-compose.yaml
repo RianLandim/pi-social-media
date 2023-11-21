@@ -71,6 +71,7 @@ services:
     image: t3-app
     environment:
       - DATABASE_URL=mysql://root:12345@db/paperland
+      - NEXTAUTH_URL=http://localhost
     env_file:
       - .env
     networks:
