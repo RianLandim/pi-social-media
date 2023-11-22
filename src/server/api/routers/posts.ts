@@ -37,50 +37,82 @@ export const postsRouter = createTRPCRouter({
         });
       });
     }),
-  list: publicProcedure.query(async ({ ctx }) => {
-    const posts = await ctx.prisma.post.findMany({
-      include: {
-        liked: {
-          select: {
-            id: true,
+  list: protectedProcedure
+    .input(
+      z
+        .object({
+          tab: z
+            .enum(["followeds", "communities"])
+            .default("followeds")
+            .optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await ctx.prisma.post.findMany({
+        ...(input?.tab === "followeds" && {
+          where: {
+            user: {
+              OR: [
+                {
+                  id: ctx.session.user.id,
+                },
+                {
+                  followers: {
+                    some: {
+                      id: ctx.session.user.id,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        }),
+        include: {
+          liked: {
+            select: {
+              id: true,
+            },
+          },
+          replyed: {
+            select: {
+              _count: true,
+            },
+          },
+          reply: {
+            select: {
+              id: true,
+              content: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
           },
         },
-        replyed: {
-          select: {
-            _count: true,
-          },
+        orderBy: {
+          createdAt: "desc",
         },
-        reply: {
-          select: {
-            id: true,
-            content: true,
-          },
-        },
-        file: {
-          select: {
-            id: true,
-            url: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-      },
-    });
-
-    if (!posts.length) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Post não encontrados",
       });
-    }
 
-    return posts;
-  }),
+      if (!posts.length) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Post não encontrados",
+        });
+      }
+
+      return posts;
+    }),
 
   like: protectedProcedure
     .input(z.object({ postId: z.string().cuid() }))

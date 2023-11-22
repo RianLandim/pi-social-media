@@ -53,18 +53,6 @@ export default function PostModel({ post }: PostModelProps) {
   const likePost = (data: RouterInputs["post"]["like"]) =>
     likePostMutation.mutate(data);
 
-  const follow = useCallback(
-    (data: RouterInputs["user"]["follow"]) => followMutation.mutate(data),
-    []
-  );
-
-  const handleFollowers = useCallback(() => {
-    return (
-      session?.user.id !== post.userId ||
-      myFollowers?.some((item) => item.id === post.userId)
-    );
-  }, []);
-
   return (
     <div
       ref={parent}
@@ -72,7 +60,7 @@ export default function PostModel({ post }: PostModelProps) {
     >
       <div className="flex w-full justify-center p-2">
         <div className="flex w-full flex-col justify-between">
-          <div className="flex w-full flex-col">
+          <div className="flex w-full flex-col space-y-4">
             <div className="flex w-full space-x-4">
               <div>
                 <Avatar
@@ -91,17 +79,6 @@ export default function PostModel({ post }: PostModelProps) {
                 </div>
                 <p className="items-center justify-self-end text-xs text-zinc-500">
                   {formatDistanceToNow(post.createdAt)}
-                  {handleFollowers() && (
-                    <div
-                      className="mb-2 ml-2 inline-flex rounded-md text-sm"
-                      onClick={() => follow({ userId: post.userId })}
-                    >
-                      <UserPlus
-                        className="hover:cursor-pointer hover:text-white"
-                        size={20}
-                      />
-                    </div>
-                  )}
                 </p>
               </div>
             </div>

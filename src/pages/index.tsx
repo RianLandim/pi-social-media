@@ -23,9 +23,12 @@ const Feed: NextPageWithLayout = () => {
       });
   }, [parent]);
 
-  const postsQuery = api.post.list.useQuery();
+  const postsQuery = api.post.list.useQuery(
+    { tab: "followeds" },
+    { keepPreviousData: true }
+  );
 
-  const [activeTab, setActiveTab] = useState<string>('following');
+  const [activeTab, setActiveTab] = useState<string>("following");
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
   };
@@ -33,25 +36,35 @@ const Feed: NextPageWithLayout = () => {
   return (
     <>
       <div className="flex flex-col space-y-4">
-        <h1 className="text-2xl font-bold text-left">Página Inicial</h1> {/* Alinhe o texto à esquerda */}
+        {/* <h1 className="text-left text-2xl font-bold">Página Inicial</h1>{" "}
+
         <div className="flex space-x-12">
           <button
-            className={`tab-button ${activeTab === 'following' ? 'active underline text-orange-500' : ''}`}
-            onClick={() => handleTabChange('following')}
+            className={`tab-button ${
+              activeTab === "following"
+                ? "active text-orange-500 underline"
+                : ""
+            }`}
+            onClick={() => handleTabChange("following")}
           >
             Seguindo
           </button>
           <button
-            className={`tab-button ${activeTab === 'communities' ? 'active underline text-orange-500' : ''}`}
-            onClick={() => handleTabChange('communities')}
+            className={`tab-button ${
+              activeTab === "communities"
+                ? "active text-orange-500 underline"
+                : ""
+            }`}
+            onClick={() => handleTabChange("communities")}
           >
             Comunidades
           </button>
         </div>
-        <div className="border-b border-gray-300"></div> {/* Linha divisória */}
+        <div className="border-b border-gray-300"></div> */}
       </div>
-
-      <InputPost />
+      <div className="flex w-3/4 flex-col items-center justify-center p-4">
+        <InputPost />
+      </div>
       <div
         ref={parent}
         className="flex w-full flex-col items-center justify-center"
