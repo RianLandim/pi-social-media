@@ -7,6 +7,7 @@ import { NextPage } from "next";
 import { ReactElement, ReactNode } from "react";
 import { setDefaultOptions } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Toaster } from "~/components/ui/toaster";
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getMainLayout?: (page: ReactElement) => ReactNode;
@@ -26,6 +27,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <SessionProvider>
       {getMainLayout(<Component {...pageProps} />)}
+      <Toaster />
     </SessionProvider>
   );
 }

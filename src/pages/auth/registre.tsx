@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
+import { useToast } from "~/hooks/use-toast";
 import { api } from "~/utils/api";
 
 const userFormSchema = z.object({
@@ -17,7 +19,28 @@ export default function Register() {
     resolver: zodResolver(userFormSchema),
   });
 
-  const createUserMutation = api.user.create.useMutation();
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const createUserMutation = api.user.create.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Sucesso",
+        description: "Usuário cadastrado com sucesso",
+      });
+
+      void router.push("/auth/entrar");
+    },
+    onError: (error) => {
+      toast({
+        title: "Erro",
+        description: error.message
+          ? error.message
+          : "Ocorreu um erro ao cadastrar usuário",
+        variant: "destructive",
+      });
+    },
+  });
 
   const submit: SubmitHandler<UserFormSchemaProps> = (data) =>
     createUserMutation.mutate(data);

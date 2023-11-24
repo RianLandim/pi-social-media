@@ -2,8 +2,12 @@ import { Gear, PaperPlaneTilt, Bell, House } from "@phosphor-icons/react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { Avatar } from "./Avatar";
+import EditUserDialog from "./dialogs/user/EditUserDialog";
+import { useState } from "react";
 
 export default function Sidebar() {
+  const [user, setUser] = useState<string>();
+
   const { data: session } = useSession();
 
   return (
@@ -16,7 +20,10 @@ export default function Sidebar() {
         />
       </div>
 
-      <div className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-zinc-600 p-4">
+      <div
+        className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-zinc-600 p-4 "
+        onClick={() => setUser(session?.user.id)}
+      >
         <Avatar url={session?.user.image} name={session?.user.name ?? ""} />
         <div>
           <div className="text-xl font-medium" id="user-name">
@@ -27,6 +34,8 @@ export default function Sidebar() {
           </div>
         </div>
       </div>
+
+      <EditUserDialog open={!!user} onChangeUser={setUser} />
 
       <div className="justify-left m-auto mt-12 flex w-56">
         <ul className="list-none">

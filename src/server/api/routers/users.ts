@@ -7,7 +7,6 @@ import { render } from "@react-email/components";
 import VerifyEmail from "~/emails/verifyMail";
 import { TRPCError } from "@trpc/server";
 
-
 export const userRouter = createTRPCRouter({
   update: protectedProcedure
     .input(z.object({
@@ -32,7 +31,6 @@ export const userRouter = createTRPCRouter({
       })
     })
   ,
-
   create: publicProcedure
     .input(
       z.object({
@@ -42,6 +40,19 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      const isAlreadyUser = await ctx.prisma.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+
+      if (isAlreadyUser) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Usuário já registrado",
+        });
+      }
+
       const user = await ctx.prisma.user.create({
         data: {
           email: input.email,
@@ -56,6 +67,28 @@ export const userRouter = createTRPCRouter({
         subject: "Verify Mail",
         to: user.email ?? "",
       });
+    }),
+  listPossibleFolloweds: protectedProcedure
+    .input(z.object({ search: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      const users = await ctx.prisma.user.findMany({
+        where: {
+          name: {
+            contains: input?.search,
+          },
+          id: {
+            not: ctx.session.user.id,
+          },
+          followers: {
+            none: {
+              id: ctx.session.user.id,
+            },
+          },
+        },
+        take: 5,
+      });
+
+      return users;
     }),
   listById: protectedProcedure
     .input(z.object({ id: z.string() }))
@@ -76,25 +109,76 @@ export const userRouter = createTRPCRouter({
       return user;
     }),
 
-  // update_profile_infos: protectedProcedure
-  //   .input(z.object({
-  //     name: z.string(),
-  //     email: z.string(),
-  //     id: z.string(),
-  //     image: z.string(),
-  //   })
-  //   )
-  //   .mutation(async ({ ctx, input }) => {
-  //     const user = await ctx.prisma.user.update({
-  //       where: {
-  //         id: input.id
-  //       },
-  //       data: {
-  //         email: input.email,
-  //         name: input.name,
-  //         image: input.image
-  //       },
-  //     })
-  //   })
-  // ,
+  listLikedPosts: protectedProcedure.query(async ({ ctx }) => {
+    const posts = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        likedPosts: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    return posts;
+  }),
+  follow: protectedProcedure
+    .input(z.object({ userId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const alreadyFollow = await ctx.prisma.user.findFirst({
+        where: {
+          followeds: {
+            some: {
+              id: input.userId,
+            },
+          },
+        },
+      });
+
+      if (alreadyFollow) {
+        await ctx.prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            followeds: {
+              disconnect: {
+                id: input.userId,
+              },
+            },
+          },
+        });
+
+        return;
+      }
+
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          followeds: {
+            connect: {
+              id: input.userId,
+            },
+          },
+        },
+      });
+    }),
+
+  listMyFollowers: protectedProcedure.query(async ({ ctx }) => {
+    const followers = await ctx.prisma.user.findFirst({
+      where: {
+        id: ctx.session.user.id,
+      },
+      select: {
+        followers: true,
+      },
+    });
+
+    return followers?.followers;
+  }),
 });
