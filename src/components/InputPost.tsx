@@ -7,7 +7,7 @@ const formSchema = z.object({ description: z.string() });
 type formSchemaProps = z.infer<typeof formSchema>;
 
 export function InputPost() {
-  const { register, handleSubmit } = useForm<formSchemaProps>({
+  const { register, handleSubmit, reset } = useForm<formSchemaProps>({
     resolver: zodResolver(formSchema),
     defaultValues: { description: "" },
   });
@@ -22,30 +22,28 @@ export function InputPost() {
       },
       {
         onSuccess: () => {
-          utils.post.list.invalidate();
+          void utils.post.list.invalidate();
+          reset();
         },
       }
     );
   };
 
   return (
-    <form onClick={handleSubmit(submit)} className="flex w-full flex-row gap-4">
+    <div className="flex w-full flex-row gap-4">
       <div className="w-full">
         <input
-          type="search"
-          id="default-search"
           className="w-full rounded-lg p-2 pl-3"
           placeholder="Escreva seu post aqui :)"
-          required
           {...register("description")}
         />
       </div>
       <button
-        type="submit"
+        onClick={handleSubmit(submit)}
         className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:ring-blue-300"
       >
         Post
       </button>
-    </form>
+    </div>
   );
 }

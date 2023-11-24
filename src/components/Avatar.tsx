@@ -9,7 +9,13 @@ type Props = {
 
 export function Avatar({ name, url, size = 48 }: Props) {
   return url ? (
-    <Image src={url} alt="avatar-img" className="h-16 w-16 rounded-full" />
+    <Image
+      src={url}
+      alt="avatar-img"
+      height={64}
+      width={64}
+      className="h-16 w-16 rounded-full"
+    />
   ) : (
     <PrimitiveAvatar
       size={size}
