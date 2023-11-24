@@ -8,6 +8,29 @@ import VerifyEmail from "~/emails/verifyMail";
 import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({
+  update: protectedProcedure
+    .input(z.object({
+      name: z.string().optional(),
+      email: z.string().optional(),
+      image: z.string().optional(),
+      password: z.string().optional(),
+      id: z.string()
+    })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.update({
+        where: {
+          id: input.id
+        },
+        data: {
+          password:  input.password ? hashSync(input.password, 10)  : undefined,
+          email: input.email,
+          name: input.name,
+          image: input.image
+        }
+      })
+    })
+  ,
   create: publicProcedure
     .input(
       z.object({
