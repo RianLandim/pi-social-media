@@ -23,7 +23,7 @@ export const userRouter = createTRPCRouter({
           id: input.id
         },
         data: {
-          password: hashSync(input.password ?? "", 10),
+          password:  input.password ? hashSync(input.password, 10)  : undefined,
           email: input.email,
           name: input.name,
           image: input.image
