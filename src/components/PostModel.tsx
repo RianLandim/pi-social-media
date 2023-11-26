@@ -2,64 +2,113 @@ import {
   ThumbsUp,
   ChatsCircle,
   ArrowsCounterClockwise,
+  UserPlus,
 } from "@phosphor-icons/react";
 import { Avatar } from "./Avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
+import { RouterInputs, RouterOutputs, api } from "~/utils/api";
+import { useCallback, useEffect, useRef, useState } from "react";
+import autoAnimate from "@formkit/auto-animate";
+import { Button } from "./ui/button";
+import { useSession } from "next-auth/react";
+
+type PostModel = NonNullable<RouterOutputs["post"]["list"][number]>;
 
 type PostModelProps = {
-  username: string;
-  profilePhoto?: string;
-  files?: string[];
-  content: string;
-  createdAt: Date;
+  post: PostModel;
 };
 
-export default function PostModel({
-  content,
-  files,
-  username,
-  profilePhoto,
-  createdAt,
-}: PostModelProps) {
+export default function PostModel({ post }: PostModelProps) {
+  const [liked, setLiked] = useState(false);
+
+  const apiContext = api.useContext();
+  const { data: session } = useSession();
+
+  const likePostMutation = api.post.like.useMutation({
+    onSettled: () => {
+      void apiContext.post.list.invalidate();
+    },
+  });
+
+  const followMutation = api.user.follow.useMutation();
+
+  const { data } = api.user.listLikedPosts.useQuery();
+  const { data: myFollowers } = api.user.listMyFollowers.useQuery();
+
+  useEffect(() => {
+    if (data?.likedPosts) {
+      const isLiked = data?.likedPosts.some((p) => p.id == post.id);
+
+      setLiked(isLiked);
+    }
+  }, [data]);
+
+  const parent = useRef(null);
+
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
+
+  const likePost = (data: RouterInputs["post"]["like"]) =>
+    likePostMutation.mutate(data);
+
   return (
-    <div className="flex w-full max-w-3xl flex-col justify-center rounded-md bg-[#ffffff] p-4 text-zinc-500">
+    <div
+      ref={parent}
+      className="flex w-full flex-col justify-center rounded-md bg-black p-4 text-white"
+    >
       <div className="flex w-full justify-center p-2">
         <div className="flex w-full flex-col justify-between">
-          <div className="flex w-full flex-col">
-            <div className="flex  w-full space-x-4">
-              
+          <div className="flex w-full flex-col space-y-4">
+            <div className="flex w-full space-x-4">
+              <div>
+                <Avatar
+                  url={post.user.image ?? undefined}
+                  name={post.user.name ?? ""}
+                  size={48}
+                />
+              </div>
 
-              <div className="flex w-full flex-row  justify-between space-x-4">
-                  <div className="flex items-center space-x-3">
-                    <Avatar url={profilePhoto} name={username} size={48} />
-                    <p className="">Posted By {username}</p>
-                  </div>
-                <p className="justify-self-end text-xs text-zinc-500">
-                  {formatDistanceToNow(createdAt)}
+              <div className="flex w-full flex-row items-center justify-between space-x-2">
+                <div className="flex flex-col">
+                  <p>{post.user.name ?? ""}</p>
+                  <p className="text-xs text-zinc-500">
+                    @{post.user.name ?? ""}
+                  </p>
+                </div>
+                <p className="items-center justify-self-end text-xs text-zinc-500">
+                  {formatDistanceToNow(post.createdAt)}
                 </p>
               </div>
             </div>
 
             <div>
-              <p className="ml-16 mb-4">{content}</p>
+              <p>{post.content}</p>
             </div>
 
-            {files &&
-              files.length > 0 &&
-              files.map((url) => <Image src={url} alt="post-image" />)}
+            {post.file &&
+              post.file.length > 0 &&
+              post.file.map(({ url }) => <Image src={url} alt="post-image" />)}
 
-            <div className="flex items-center justify-normal ml-16 space-x-5">
-              <p className="flex gap-1 items-center p-1 rounded-sm hover:bg-[#e6e6e6] cursor-pointer">
-                <ThumbsUp size={22} /> 200
+            <div className="flex items-center justify-around">
+              <p
+                onClick={() => likePost({ postId: post.id })}
+                className="flex gap-3 hover:cursor-pointer"
+              >
+                <ThumbsUp
+                  size={22}
+                  color={liked ? "green" : undefined}
+                  weight={liked ? "fill" : undefined}
+                />
+                {post.liked.length}
               </p>
               <p className="flex gap-1 items-center p-1 rounded-sm hover:bg-[#e6e6e6] cursor-pointer">
                 <ArrowsCounterClockwise size={22} />
-                200
               </p>
               <p className="flex gap-1 items-center p-1 rounded-sm hover:bg-[#e6e6e6] cursor-pointer">
                 <ChatsCircle size={22} />
-                200
+                {post.reply.length}
               </p>
             </div>
           </div>

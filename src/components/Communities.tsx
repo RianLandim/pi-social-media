@@ -1,81 +1,107 @@
-import {
-  Gear,
-  PaperPlaneTilt,
-  Bell,
-  House,
-  GameController,
-  Book,
-  Newspaper,
-  Television,
-  TelevisionSimple,
-} from "@phosphor-icons/react";
-import { BookBookmark, BookOpen, PenNibStraight, Smiley } from "@phosphor-icons/react/dist/ssr";
-import { BookIcon, Pen, PenBox, PenLineIcon, Pencil, Search } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
+import { Search } from "lucide-react";
+import { useState } from "react";
+import { match } from "ts-pattern";
+import { api } from "~/utils/api";
+import { Skeleton } from "./ui/skeleton";
+import { Avatar } from "./Avatar";
+import { UserPlus } from "@phosphor-icons/react";
+import { useToast } from "~/hooks/use-toast";
 
 export default function Communities() {
-  const { data: session } = useSession();
+  const [userSearch, setUserSearch] = useState<string>();
+
+  const apiContext = api.useContext();
+  const { toast } = useToast();
+
+  const usersQuery = api.user.listPossibleFolloweds.useQuery({
+    search: userSearch,
+  });
+
+  const followUserMutation = api.user.follow.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Sucesso",
+        description: "Usuário seguido com sucesso",
+        variant: "success",
+      });
+      void apiContext.user.listPossibleFolloweds.invalidate();
+      void apiContext.post.list.invalidate();
+    },
+  });
 
   return (
-    <section className="h-screem flex w-3/12 list-none flex-col items-center space-y-4 bg-black p-4 py-5 text-white">
+    <aside className="h-screem flex w-3/12 list-none flex-col items-center space-y-4 bg-black p-4 py-5 text-white">
+      <div className="flex w-full flex-col rounded-md bg-zinc-800 p-4">
+        <div className="mb-2 text-xl font-bold">Comunidades</div>
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#ff0000]"></div>
+          <li className="">Games</li>
+        </div>
+
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#ffaa00]"></div>
+          <li>Educacional</li>
+        </div>
+
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#00ff62]"></div>
+          <li>Humor</li>
+        </div>
+
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#00ffee]"></div>
+          <li>Notícias</li>
+        </div>
+
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#a200ff]"></div>
+          <li>Séries e Filmes</li>
+        </div>
+
+        <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
+          <div className="h-5 w-5 rounded-sm bg-[#ff00dd]"></div>
+          <li>Literatura</li>
+        </div>
+      </div>
       <div className="flex w-full items-center justify-center rounded-md bg-zinc-800 px-2">
         <Search />
         <input
           placeholder="Buscar"
           type="text"
-          id="name"
-          name="Comnidade"
           className="flex w-full rounded-sm bg-zinc-800 p-2 text-white"
+          value={userSearch}
+          onChange={({ target }) => setUserSearch(target.value)}
         />
       </div>
-      <div
-        className="flex w-full
-      flex-col rounded-md bg-zinc-800 p-4"
-      >
-        <div className="mb-2 text-xl font-bold">Comunidades</div>
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#ff0000]">
-            <GameController />
-          </div>
-          <li>Games</li>
-        </div>
+      <div className="flex w-full flex-col items-center justify-center rounded-md bg-zinc-800 p-2">
+        <div className="ml-2 self-start text-xl font-bold">Usuários</div>
 
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#ffaa00]">
-            <Book />
-          </div>
-          <li>Educacional</li>
-        </div>
-
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#46a56a]">
-            <Smiley />
-          </div>
-          <li>Humor</li>
-        </div>
-
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#0077ff]">
-            <Newspaper />
-          </div>
-          <li>Notícias</li>
-        </div>
-
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#a200ff]">
-            <Television />
-          </div>
-          <li>Séries e Filmes</li>
-        </div>
-
-        <div className="flex w-fit items-center space-x-4 rounded-md p-2 hover:bg-slate-800">
-          <div className="flex h-7 w-7 items-center justify-center rounded-sm bg-[#ff00dd]">
-            <PenLineIcon />
-          </div>
-          <li>Literatura</li>
-        </div>
+        {match(usersQuery)
+          .with({ isLoading: true }, () => (
+            <Skeleton className="min-h-[4rem] w-full" />
+          ))
+          .with({ isError: true }, ({ error }) => (
+            <div>
+              {error.message ? error.message : "Erro ao buscar usuário"}
+            </div>
+          ))
+          .otherwise(({ data }) =>
+            data.map((user) => (
+              <div className="flex w-full flex-row items-center justify-center p-2">
+                <div className="flex w-full flex-row items-center justify-start space-x-4">
+                  <Avatar name={user.name ?? ""} url={user.image} size={22} />
+                  <p>{user.name}</p>
+                </div>
+                <div
+                  className="justify-self-end rounded-full p-2 hover:cursor-pointer hover:bg-slate-600"
+                  onClick={() => followUserMutation.mutate({ userId: user.id })}
+                >
+                  <UserPlus size={22} />
+                </div>
+              </div>
+            ))
+          )}
       </div>
-    </section>
+    </aside>
   );
 }
