@@ -62,13 +62,11 @@ export default function PostModel({ post }: PostModelProps) {
         <div className="flex w-full flex-col justify-between">
           <div className="flex w-full flex-col space-y-4">
             <div className="flex w-full space-x-4">
-              <div>
-                <Avatar
-                  url={post.user.image ?? undefined}
-                  name={post.user.name ?? ""}
-                  size={48}
-                />
-              </div>
+              <Avatar
+                url={post.user.image ?? undefined}
+                name={post.user.name ?? ""}
+                size={48}
+              />
 
               <div className="flex w-full flex-row items-center justify-between space-x-2">
                 <div className="flex flex-col">

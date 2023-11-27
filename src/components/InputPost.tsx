@@ -1,7 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { text } from "stream/consumers";
 import { z } from "zod";
 import { api } from "~/utils/api";
+import { ToggleGroup } from "./ui/toggle-group";
+import { Toggle } from "./ui/toggle";
+import { Paperclip } from "@phosphor-icons/react";
 
 const formSchema = z.object({ description: z.string() });
 type formSchemaProps = z.infer<typeof formSchema>;
@@ -30,20 +34,12 @@ export function InputPost() {
   };
 
   return (
-    <div className="flex w-full flex-row gap-4">
-      <div className="w-full">
-        <input
-          className="w-full rounded-lg p-2 pl-3"
-          placeholder="Escreva seu post aqui :)"
-          {...register("description")}
-        />
-      </div>
-      <button
-        onClick={handleSubmit(submit)}
-        className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:ring-blue-300"
-      >
-        Post
-      </button>
+    <div className="h-full min-h-min w-full rounded-md bg-white">
+      <textarea
+        placeholder="No que está pensando?"
+        className="h-full w-full resize-none rounded-md p-2"
+      />
+      <input type="file" />
     </div>
   );
 }
