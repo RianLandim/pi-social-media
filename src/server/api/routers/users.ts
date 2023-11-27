@@ -6,6 +6,7 @@ import { env } from "process";
 import { render } from "@react-email/components";
 import VerifyEmail from "~/emails/verifyMail";
 import { TRPCError } from "@trpc/server";
+import { s3 } from "../services/object";
 
 export const userRouter = createTRPCRouter({
   create: publicProcedure
@@ -157,5 +158,67 @@ export const userRouter = createTRPCRouter({
     });
 
     return followers?.followers;
+  }),
+
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string().optional(),
+        email: z.string().optional(),
+        avatar: z
+          .object({
+            filename: z.string(),
+            mimetype: z.string(),
+          })
+          .optional(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { avatar, id, email, name } = input;
+
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          email,
+        },
+      });
+
+      if (avatar) {
+        const imageKey = `${input.id}/avatar/${avatar.filename}`;
+
+        const presignedPost = await s3.getUploadUrl(imageKey);
+        const serviceLogoURL = await s3.getFileUrl(imageKey);
+
+        await ctx.prisma.user.update({
+          where: {
+            id,
+          },
+          data: {
+            image: serviceLogoURL,
+          },
+        });
+
+        return presignedPost;
+      }
+    }),
+
+  listMe: protectedProcedure.query(async ({ ctx }) => {
+    const me = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    });
+
+    if (!me) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+      });
+    }
+
+    return me;
   }),
 });

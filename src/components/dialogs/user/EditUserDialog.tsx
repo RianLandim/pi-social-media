@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { InputFile } from "~/components/InputFile";
+import { Button } from "~/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { api } from "~/utils/api";
+import { uploadFileToS3 } from "~/utils/uploadToS3";
 
 const editUserSchema = z.object({
   name: z.string(),
@@ -19,24 +22,48 @@ const editUserSchema = z.object({
 type EditUserSchemaProps = z.infer<typeof editUserSchema>;
 
 interface EditUserDialogProps {
-  open: boolean;
+  userId?: string;
   onChangeUser(user?: string): void;
 }
 
 export default function EditUserDialog({
-  open,
+  userId,
   onChangeUser,
 }: EditUserDialogProps) {
+  const { data } = api.user.listMe.useQuery();
+
   const { register, handleSubmit, control } = useForm<EditUserSchemaProps>({
     resolver: zodResolver(editUserSchema),
+    defaultValues: {
+      name: data?.name ?? undefined,
+      email: data?.email ?? undefined,
+    },
   });
 
+  const editUserMutation = api.user.update.useMutation();
+
   const submit: SubmitHandler<EditUserSchemaProps> = (data) =>
-    console.log(data);
+    editUserMutation.mutate(
+      {
+        ...data,
+        id: userId ?? "",
+        avatar: {
+          filename: data.avatar.name,
+          mimetype: data.avatar.type,
+        },
+      },
+      {
+        onSuccess: (presignedPost) => {
+          if (presignedPost) {
+            uploadFileToS3(data.avatar, presignedPost);
+          }
+        },
+      }
+    );
 
   return (
     <Dialog
-      open={open}
+      open={!!userId}
       onOpenChange={(open) => {
         if (!open) {
           onChangeUser(undefined);
@@ -77,9 +104,12 @@ export default function EditUserDialog({
                 value={value}
                 onChange={onChange}
                 name="avatar"
+                avatarFrame
               />
             )}
           />
+
+          <Button onClick={handleSubmit(submit)}>Salvar</Button>
         </form>
       </DialogContent>
     </Dialog>

@@ -12,8 +12,8 @@ export function Avatar({ name, url, size = 48 }: Props) {
     <Image
       src={url}
       alt="avatar-img"
-      height={64}
-      width={64}
+      height={size}
+      width={size}
       className="h-16 w-16 rounded-full"
     />
   ) : (

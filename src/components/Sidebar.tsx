@@ -4,11 +4,16 @@ import Link from "next/link";
 import { Avatar } from "./Avatar";
 import EditUserDialog from "./dialogs/user/EditUserDialog";
 import { useState } from "react";
+import { api } from "~/utils/api";
+import { match } from "ts-pattern";
+import { Skeleton } from "./ui/skeleton";
 
 export default function Sidebar() {
   const [user, setUser] = useState<string>();
 
   const { data: session } = useSession();
+
+  const meQuery = api.user.listMe.useQuery();
 
   return (
     <div className="flex h-screen w-1/5 flex-col justify-center bg-black p-2 text-white">
@@ -19,23 +24,27 @@ export default function Sidebar() {
           alt="Minha Imagem"
         />
       </div>
-
-      <div
-        className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-zinc-600 p-4 "
-        onClick={() => setUser(session?.user.id)}
-      >
-        <Avatar url={session?.user.image} name={session?.user.name ?? ""} />
-        <div>
-          <div className="text-xl font-medium" id="user-name">
-            <p>{session?.user.name}</p>
+      {match(meQuery)
+        .with({ isError: true }, () => <div></div>)
+        .with({ isLoading: true }, () => <Skeleton />)
+        .otherwise(({ data }) => (
+          <div
+            className="mx-auto flex w-56 items-center justify-center space-x-4 rounded-md bg-zinc-600 p-4 "
+            onClick={() => setUser(data.id)}
+          >
+            <Avatar url={data.image} name={data.name ?? ""} />
+            <div>
+              <div className="text-xl font-medium" id="user-name">
+                <p>{data.name}</p>
+              </div>
+              <div className="text-xs font-light opacity-80">
+                <p>@{data.name}</p>
+              </div>
+            </div>
           </div>
-          <div className="text-xs font-light opacity-80">
-            <p>@{session?.user.name}</p>
-          </div>
-        </div>
-      </div>
+        ))}
 
-      <EditUserDialog open={!!user} onChangeUser={setUser} />
+      <EditUserDialog userId={user} onChangeUser={setUser} />
 
       <div className="justify-left m-auto mt-12 flex w-56">
         <ul className="list-none">

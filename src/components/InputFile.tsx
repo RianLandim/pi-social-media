@@ -11,6 +11,7 @@ type Props = {
   className?: string;
   value?: File;
   onChange?: (value: File | undefined) => void;
+  avatarFrame?: boolean;
 };
 
 export const InputFile = ({
@@ -20,6 +21,7 @@ export const InputFile = ({
   value,
   onChange,
   error = false,
+  avatarFrame = false,
   className,
 }: Props) => {
   const inputId = useMemo(
@@ -65,7 +67,16 @@ export const InputFile = ({
           htmlFor={inputId}
           className="flex h-3/4 w-full cursor-pointer flex-row justify-center"
         >
-          <Avatar name="" url={URL.createObjectURL(value)} />
+          {avatarFrame ? (
+            <Avatar name="" url={URL.createObjectURL(value)} />
+          ) : (
+            <Image
+              alt="Image-input"
+              src={URL.createObjectURL(value)}
+              width={48}
+              height={48}
+            ></Image>
+          )}
         </label>
       ) : (
         <label

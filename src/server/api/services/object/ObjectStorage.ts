@@ -19,14 +19,14 @@ export class ObjectStorageService implements IObjectStorageService {
 
   async getUploadUrl(key: string): Promise<PresignedPost> {
     const presignedPost = await createPresignedPost(this.s3Client, {
-      Bucket: env.AWS_BUCKET_NAME ?? "",
+      Bucket: env.AWS_BUCKET_NAME,
       Key: key,
       Fields: {
         acl: "public-read",
       },
       Conditions: [
         { acl: "public-read" },
-        { bucket: env.AWS_BUCKET_NAME ?? "" },
+        { bucket: env.AWS_BUCKET_NAME },
         ["content-length-range", 0, 10485760],
       ],
       Expires: 15 * 60,
