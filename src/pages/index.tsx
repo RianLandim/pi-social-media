@@ -35,7 +35,7 @@ const Feed: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col space-y-6">
         {/* <h1 className="text-left text-2xl font-bold">Página Inicial</h1>{" "}
 
         <div className="flex space-x-12">
@@ -62,7 +62,7 @@ const Feed: NextPageWithLayout = () => {
         </div>
         <div className="border-b border-gray-300"></div> */}
       </div>
-      <div className="flex w-3/4 flex-col items-center justify-center p-4">
+      <div className="mb-4 flex w-3/4 flex-col items-center justify-center p-4">
         <InputPost />
       </div>
       <div

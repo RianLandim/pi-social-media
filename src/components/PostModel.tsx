@@ -8,9 +8,9 @@ import { Avatar } from "./Avatar";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
 import { RouterInputs, RouterOutputs, api } from "~/utils/api";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
-import { Button } from "./ui/button";
+
 import { useSession } from "next-auth/react";
 
 type PostModel = NonNullable<RouterOutputs["post"]["list"][number]>;
@@ -31,10 +31,7 @@ export default function PostModel({ post }: PostModelProps) {
     },
   });
 
-  const followMutation = api.user.follow.useMutation();
-
   const { data } = api.user.listLikedPosts.useQuery();
-  const { data: myFollowers } = api.user.listMyFollowers.useQuery();
 
   useEffect(() => {
     if (data?.likedPosts) {
@@ -87,7 +84,9 @@ export default function PostModel({ post }: PostModelProps) {
 
             {post.file &&
               post.file.length > 0 &&
-              post.file.map(({ url }) => <Image src={url} alt="post-image" />)}
+              post.file.map(({ url }) => (
+                <Image src={url} width={200} height={200} alt="post-image" />
+              ))}
 
             <div className="flex items-center justify-around">
               <p

@@ -5,37 +5,50 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-
-const fileName = z.string().refine((val) => {
-  const extension = val.split(".").pop();
-
-  return (
-    extension === "png" ||
-    extension === "jpeg" ||
-    extension === "mp4" ||
-    extension === "mp3"
-  );
-});
+import { prisma } from "~/server/db";
+import { s3 } from "../services/object";
 
 export const postsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
-        files: z.array(fileName).optional(),
+        file: z
+          .object({ filename: z.string(), mimetype: z.string() })
+          .optional(),
         content: z.string(),
         communityId: z.string().cuid(),
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.$transaction(async (prisma) => {
-        const post = await prisma.post.create({
+      const post = await prisma.post.create({
+        data: {
+          content: input.content,
+          communityId: input.communityId,
+          userId: ctx.session.user.id,
+        },
+      });
+
+      if (input.file) {
+        const imageKey = `/posts/${post.id}/${input.file.filename}`;
+
+        const presignedPost = await s3.getUploadUrl(imageKey);
+        const servicePostURL = await s3.getFileUrl(imageKey);
+
+        await ctx.prisma.post.update({
+          where: {
+            id: post.id,
+          },
           data: {
-            content: input.content,
-            communityId: input.communityId,
-            userId: ctx.session.user.id,
+            file: {
+              create: {
+                url: servicePostURL,
+              },
+            },
           },
         });
-      });
+
+        return presignedPost;
+      }
     }),
   list: protectedProcedure
     .input(

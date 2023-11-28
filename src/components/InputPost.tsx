@@ -1,17 +1,28 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { text } from "stream/consumers";
+import { useEffect } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+
 import { z } from "zod";
 import { api } from "~/utils/api";
-import { ToggleGroup } from "./ui/toggle-group";
-import { Toggle } from "./ui/toggle";
-import { Paperclip } from "@phosphor-icons/react";
+import { uploadFileToS3 } from "~/utils/uploadToS3";
 
-const formSchema = z.object({ description: z.string() });
+const formSchema = z.object({
+  description: z.string(),
+  file:
+    typeof window !== "undefined"
+      ? z.custom<File>().optional()
+      : z.instanceof(File).optional(),
+});
 type formSchemaProps = z.infer<typeof formSchema>;
 
 export function InputPost() {
-  const { register, handleSubmit, reset } = useForm<formSchemaProps>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<formSchemaProps>({
     resolver: zodResolver(formSchema),
     defaultValues: { description: "" },
   });
@@ -23,9 +34,15 @@ export function InputPost() {
       {
         communityId: "clnrvuhce000089r40bijaxln",
         content: data.description,
+        file: data.file
+          ? { filename: data.file.name, mimetype: data.file.type }
+          : undefined,
       },
       {
-        onSuccess: () => {
+        onSuccess: (presignedPost) => {
+          if (presignedPost && data.file) {
+            uploadFileToS3(data.file, presignedPost);
+          }
           void utils.post.list.invalidate();
           reset();
         },
@@ -34,12 +51,25 @@ export function InputPost() {
   };
 
   return (
-    <div className="h-full min-h-min w-full rounded-md bg-white">
-      <textarea
+    <form
+      onSubmit={handleSubmit(submit)}
+      className="h-full min-h-min w-full rounded-md bg-white"
+    >
+      <input
         placeholder="No que está pensando?"
         className="h-full w-full resize-none rounded-md p-2"
+        {...register("description")}
       />
-      <input type="file" />
-    </div>
+      <Controller
+        control={control}
+        name="file"
+        render={({ field: { onChange } }) => (
+          <input
+            type="file"
+            onChange={({ target }) => onChange(target.files?.[0])}
+          />
+        )}
+      />
+    </form>
   );
 }
