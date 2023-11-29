@@ -1,11 +1,12 @@
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { match } from "ts-pattern";
 import { api } from "~/utils/api";
 import { Skeleton } from "./ui/skeleton";
 import { Avatar } from "./Avatar";
 import { UserPlus } from "@phosphor-icons/react";
 import { useToast } from "~/hooks/use-toast";
+import { useRouter } from "next/router";
 
 export default function Communities() {
   const [userSearch, setUserSearch] = useState<string>();
@@ -16,6 +17,36 @@ export default function Communities() {
   const usersQuery = api.user.listPossibleFolloweds.useQuery({
     search: userSearch,
   });
+
+  const router = useRouter();
+  const queryParam = router.query;
+
+  const updateQueryParam = useCallback(
+    async (param: string, value?: string) => {
+      const query = new URLSearchParams();
+
+      if (queryParam["q"]?.toString() === value) {
+        await router.push({
+          pathname: router.pathname,
+          query: {},
+        });
+
+        return;
+      }
+
+      if (value !== undefined && value !== "") {
+        query.set(param, value);
+      } else {
+        query.delete(param);
+      }
+
+      await router.push({
+        pathname: router.pathname,
+        query: query.toString(),
+      });
+    },
+    [router]
+  );
 
   const followUserMutation = api.user.follow.useMutation({
     onSuccess: () => {
@@ -35,32 +66,36 @@ export default function Communities() {
         <div className="mb-2 text-xl font-bold">Comunidades</div>
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#ff0000]"></div>
-          <li className="">Games</li>
+          <li onClick={() => updateQueryParam("q", "games")}>Games</li>
         </div>
 
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#ffaa00]"></div>
-          <li>Educacional</li>
+          <li onClick={() => updateQueryParam("q", "educacional")}>
+            Educacional
+          </li>
         </div>
 
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#00ff62]"></div>
-          <li>Humor</li>
+          <li onClick={() => updateQueryParam("q", "humor")}>Humor</li>
         </div>
 
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#00ffee]"></div>
-          <li>Notícias</li>
+          <li onClick={() => updateQueryParam("q", "noticias")}>Notícias</li>
         </div>
 
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#a200ff]"></div>
-          <li>Séries e Filmes</li>
+          <li onClick={() => updateQueryParam("q", "movies")}>
+            Séries e Filmes
+          </li>
         </div>
 
         <div className="flex w-fit items-center space-x-2 rounded-md p-2 hover:cursor-pointer hover:bg-slate-800">
           <div className="h-5 w-5 rounded-sm bg-[#ff00dd]"></div>
-          <li>Literatura</li>
+          <li onClick={() => updateQueryParam("q", "books")}>Literatura</li>
         </div>
       </div>
       <div className="flex w-full items-center justify-center rounded-md bg-zinc-800 px-2">

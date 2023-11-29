@@ -23,7 +23,6 @@ export default function PostModel({ post }: PostModelProps) {
   const [liked, setLiked] = useState(false);
 
   const apiContext = api.useContext();
-  const { data: session } = useSession();
 
   const likePostMutation = api.post.like.useMutation({
     onSettled: () => {

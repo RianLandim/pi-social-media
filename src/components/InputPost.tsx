@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { api } from "~/utils/api";
 import { uploadFileToS3 } from "~/utils/uploadToS3";
+import { Toggle } from "./ui/toggle";
+import { Switch } from "./ui/switch";
 
 const formSchema = z.object({
   description: z.string(),
@@ -16,13 +18,9 @@ const formSchema = z.object({
 type formSchemaProps = z.infer<typeof formSchema>;
 
 export function InputPost() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<formSchemaProps>({
+  const [showFile, setShowFile] = useState(false);
+
+  const { register, handleSubmit, reset, control } = useForm<formSchemaProps>({
     resolver: zodResolver(formSchema),
     defaultValues: { description: "" },
   });
@@ -53,23 +51,36 @@ export function InputPost() {
   return (
     <form
       onSubmit={handleSubmit(submit)}
-      className="h-full min-h-min w-full rounded-md bg-white"
+      className={`flex h-full ${
+        showFile && "min-h-[14rem]"
+      } w-full flex-col space-y-4 rounded-md bg-white p-2`}
     >
-      <input
+      <textarea
         placeholder="No que está pensando?"
-        className="h-full w-full resize-none rounded-md p-2"
+        className="h-2/3 w-full resize-none rounded-md p-2"
         {...register("description")}
       />
-      <Controller
-        control={control}
-        name="file"
-        render={({ field: { onChange } }) => (
-          <input
-            type="file"
-            onChange={({ target }) => onChange(target.files?.[0])}
-          />
-        )}
-      />
+
+      <div className="flex w-full flex-row space-x-2">
+        <p>Enviar foto</p>
+        <Switch
+          checked={showFile}
+          onCheckedChange={(value) => setShowFile(value)}
+        />
+      </div>
+
+      {showFile && (
+        <Controller
+          control={control}
+          name="file"
+          render={({ field: { onChange } }) => (
+            <input
+              type="file"
+              onChange={({ target }) => onChange(target.files?.[0])}
+            />
+          )}
+        />
+      )}
     </form>
   );
 }
