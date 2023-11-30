@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { api } from "~/utils/api";
 import { uploadFileToS3 } from "~/utils/uploadToS3";
-import { Toggle } from "./ui/toggle";
+
 import { Switch } from "./ui/switch";
 
 const formSchema = z.object({
@@ -15,19 +15,20 @@ const formSchema = z.object({
       ? z.custom<File>().optional()
       : z.instanceof(File).optional(),
 });
-type formSchemaProps = z.infer<typeof formSchema>;
+type FormSchemaProps = z.infer<typeof formSchema>;
 
 export function InputPost() {
   const [showFile, setShowFile] = useState(false);
 
-  const { register, handleSubmit, reset, control } = useForm<formSchemaProps>({
+  const { register, handleSubmit, reset, control } = useForm<FormSchemaProps>({
     resolver: zodResolver(formSchema),
     defaultValues: { description: "" },
   });
 
   const utils = api.useContext();
   const postSubmitMutation = api.post.create.useMutation();
-  const submit: SubmitHandler<formSchemaProps> = (data) => {
+
+  const submit: SubmitHandler<FormSchemaProps> = (data) => {
     postSubmitMutation.mutate(
       {
         communityId: "clnrvuhce000089r40bijaxln",

@@ -28,40 +28,8 @@ const Feed: NextPageWithLayout = () => {
     { keepPreviousData: true }
   );
 
-  const [activeTab, setActiveTab] = useState<string>("following");
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   return (
     <>
-      <div className="flex flex-col space-y-6">
-        {/* <h1 className="text-left text-2xl font-bold">Página Inicial</h1>{" "}
-
-        <div className="flex space-x-12">
-          <button
-            className={`tab-button ${
-              activeTab === "following"
-                ? "active text-orange-500 underline"
-                : ""
-            }`}
-            onClick={() => handleTabChange("following")}
-          >
-            Seguindo
-          </button>
-          <button
-            className={`tab-button ${
-              activeTab === "communities"
-                ? "active text-orange-500 underline"
-                : ""
-            }`}
-            onClick={() => handleTabChange("communities")}
-          >
-            Comunidades
-          </button>
-        </div>
-        <div className="border-b border-gray-300"></div> */}
-      </div>
       <div className="mb-4 flex w-3/4 flex-col items-center justify-center p-4">
         <InputPost />
       </div>

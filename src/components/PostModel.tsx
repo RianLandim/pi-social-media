@@ -11,8 +11,6 @@ import { RouterInputs, RouterOutputs, api } from "~/utils/api";
 import { useEffect, useRef, useState } from "react";
 import autoAnimate from "@formkit/auto-animate";
 
-import { useSession } from "next-auth/react";
-
 type PostModel = NonNullable<RouterOutputs["post"]["list"][number]>;
 
 type PostModelProps = {
